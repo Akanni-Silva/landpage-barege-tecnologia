@@ -1,73 +1,176 @@
-# React + TypeScript + Vite
+# Barege Tecnologia - Landing Page
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Landing page institucional da Barege Tecnologia para captação de solicitações de certificado digital. O projeto apresenta os certificados A1 e A3, oferece chamadas diretas para WhatsApp, possui formulário de contato integrado ao EmailJS e uma seção voltada para parceria com contadores.
 
-Currently, two official plugins are available:
+## Tecnologias
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- React 19
+- TypeScript
+- Vite
+- Tailwind CSS 4
+- EmailJS
+- Lucide React
 
-## React Compiler
+## Funcionalidades
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Página inicial responsiva para divulgação de certificados digitais.
+- CTA para atendimento via WhatsApp.
+- Comparativo entre certificado A1 e A3.
+- Formulário de solicitação com envio por EmailJS.
+- Feedback visual de envio, carregamento e erro.
+- Seção de parceria para contadores.
+- Dados de contato centralizados em um único arquivo.
 
-## Expanding the ESLint configuration
+## Pré-requisitos
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Antes de começar, tenha instalado:
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- Node.js
+- npm
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Instalação
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+Clone o repositório e instale as dependências:
+
+```bash
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Como executar
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Inicie o servidor de desenvolvimento:
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm run dev
 ```
+
+Depois, acesse a URL exibida no terminal, normalmente:
+
+```text
+http://localhost:5173
+```
+
+## Scripts disponíveis
+
+```bash
+npm run dev
+```
+
+Executa o projeto em modo de desenvolvimento com hot reload.
+
+```bash
+npm run build
+```
+
+Gera a versão de produção em `dist/`, executando antes a checagem do TypeScript.
+
+```bash
+npm run preview
+```
+
+Executa uma prévia local da versão gerada para produção.
+
+```bash
+npm run lint
+```
+
+Executa o ESLint no projeto.
+
+## Estrutura do projeto
+
+```text
+src/
+  components/
+    footer/
+      footer.tsx
+    navbar/
+      navbar.tsx
+  data/
+    companyInfo.ts
+  pages/
+    homepage/
+      homepage.tsx
+  App.tsx
+  main.tsx
+  index.css
+public/
+  favicon.svg
+  icons.svg
+```
+
+## Personalização dos dados da empresa
+
+As principais informações de contato ficam em:
+
+```text
+src/data/companyInfo.ts
+```
+
+Nesse arquivo é possível alterar:
+
+- Nome da empresa
+- Endereço
+- E-mail
+- Instagram
+- Número do WhatsApp
+- Link de atendimento pelo WhatsApp
+
+## Configuração do formulário
+
+O formulário de solicitação usa o EmailJS por meio da função `sendForm`, configurada em:
+
+```text
+src/pages/homepage/homepage.tsx
+```
+
+Para usar outra conta ou template do EmailJS, altere os valores:
+
+- Service ID
+- Template ID
+- Public Key
+
+Os campos enviados atualmente pelo formulário são:
+
+- Nome completo
+- WhatsApp
+- CPF ou CNPJ
+- Tipo de certificado
+- Data de envio
+
+## Estilos
+
+O projeto usa Tailwind CSS 4. As cores principais da identidade visual estão definidas em:
+
+```text
+src/index.css
+```
+
+Cores configuradas:
+
+- `baby-blue-ice`
+- `rich-cerulean`
+- `yale-blue`
+- `bright-snow`
+- `bright-snow-2`
+
+## Build para produção
+
+Para gerar os arquivos finais:
+
+```bash
+npm run build
+```
+
+O resultado será criado na pasta:
+
+```text
+dist/
+```
+
+## Contato
+
+Barege Tecnologia  
+E-mail: baregetecnologia@gmail.com  
+WhatsApp: (11) 9 9860-6204  
+Instagram: @baregetecnologia  
+Endereço: Av. dos Autonomistas, 2561 - Osasco
