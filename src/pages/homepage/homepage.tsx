@@ -8,6 +8,7 @@ import {
   UserPlus,
   Zap,
   Loader2,
+  AlertCircle,
 } from "lucide-react";
 import { companyInfo } from "../../data/companyInfo";
 import { useRef, useState } from "react";
@@ -19,15 +20,144 @@ function Homepage() {
   const [submitMessage, setSubmitMessage] = useState("");
   const [messageType, setMessageType] = useState("");
 
+  // ✅ Estados para erros de validação
+  const [errors, setErrors] = useState({});
+
+  // ✅ Funções de validação com regex
+  const validarWhatsApp = (valor) => {
+    const regexWhatsApp = /^\(?\d{2}\)?\s?\d{4,5}-?\d{4}$/;
+    return regexWhatsApp.test(valor.replace(/\s/g, ""));
+  };
+
+  const validarCPF = (cpf) => {
+    // Remove caracteres não numéricos
+    cpf = cpf.replace(/[^\d]/g, "");
+
+    // Verifica se tem 11 dígitos
+    if (cpf.length !== 11) return false;
+
+    // Verifica se todos os dígitos são iguais
+    if (/^(\d)\1{10}$/.test(cpf)) return false;
+
+    // Validação do CPF
+    let soma = 0;
+    for (let i = 0; i < 9; i++) {
+      soma += parseInt(cpf.charAt(i)) * (10 - i);
+    }
+    let resto = 11 - (soma % 11);
+    let digito1 = resto > 9 ? 0 : resto;
+
+    if (parseInt(cpf.charAt(9)) !== digito1) return false;
+
+    soma = 0;
+    for (let i = 0; i < 10; i++) {
+      soma += parseInt(cpf.charAt(i)) * (11 - i);
+    }
+    resto = 11 - (soma % 11);
+    let digito2 = resto > 9 ? 0 : resto;
+
+    return parseInt(cpf.charAt(10)) === digito2;
+  };
+
+  const validarCNPJ = (cnpj) => {
+    // Remove caracteres não numéricos
+    cnpj = cnpj.replace(/[^\d]/g, "");
+
+    // Verifica se tem 14 dígitos
+    if (cnpj.length !== 14) return false;
+
+    // Verifica se todos os dígitos são iguais
+    if (/^(\d)\1{13}$/.test(cnpj)) return false;
+
+    // Validação do CNPJ
+    const pesos1 = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+    const pesos2 = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+
+    let soma = 0;
+    for (let i = 0; i < 12; i++) {
+      soma += parseInt(cnpj.charAt(i)) * pesos1[i];
+    }
+    let resto = soma % 11;
+    let digito1 = resto < 2 ? 0 : 11 - resto;
+
+    if (parseInt(cnpj.charAt(12)) !== digito1) return false;
+
+    soma = 0;
+    for (let i = 0; i < 13; i++) {
+      soma += parseInt(cnpj.charAt(i)) * pesos2[i];
+    }
+    resto = soma % 11;
+    let digito2 = resto < 2 ? 0 : 11 - resto;
+
+    return parseInt(cnpj.charAt(13)) === digito2;
+  };
+
+  const validarDocumento = (valor) => {
+    const numeros = valor.replace(/[^\d]/g, "");
+
+    if (numeros.length === 11) {
+      return validarCPF(valor);
+    } else if (numeros.length === 14) {
+      return validarCNPJ(valor);
+    }
+    return false;
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (!form.current) return;
+
+    // ✅ Coletar valores
+    const formData = new FormData(form.current);
+    const nome = formData.get("nome")?.toString().trim() || "";
+    const whatsapp = formData.get("whatsapp")?.toString().trim() || "";
+    const documento = formData.get("documento")?.toString().trim() || "";
+    const tipo = formData.get("tipo-certificado")?.toString() || "";
+
+    // ✅ Validar campos
+    const newErrors = {};
+
+    // Nome: mínimo 3 caracteres
+    if (nome.length < 3) {
+      newErrors.nome = "Nome deve ter pelo menos 3 caracteres";
+    }
+
+    // WhatsApp: formato válido
+    if (!whatsapp) {
+      newErrors.whatsapp = "WhatsApp é obrigatório";
+    } else if (!validarWhatsApp(whatsapp)) {
+      newErrors.whatsapp = "Formato inválido. Use: (11) 99999-9999";
+    }
+
+    // Documento: CPF ou CNPJ válido
+    if (!documento) {
+      newErrors.documento = "CPF ou CNPJ é obrigatório";
+    } else if (!validarDocumento(documento)) {
+      newErrors.documento = "CPF ou CNPJ inválido";
+    }
+
+    // Tipo de certificado
+    if (!tipo) {
+      newErrors.tipo = "Selecione um tipo de certificado";
+    }
+
+    // ✅ Se houver erros, mostrar e não enviar
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      setSubmitMessage("❌ Corrija os erros abaixo antes de enviar.");
+      setMessageType("error");
+      return;
+    }
+
+    // ✅ Limpar erros e enviar
+    setErrors({});
     setIsSubmitting(true);
     setSubmitMessage("");
 
-    // Usando sendForm - passa o formulário diretamente
     sendForm(
-      "service_owuos8i", // ⚠️ Substitua pelo seu Service ID
-      "template_omknf2m", // ⚠️ Substitua pelo seu Template ID
+      "service_owuos8i",
+      "template_omknf2m",
       form.current,
       "_FstKZ8T_TaD7uNMf",
     )
@@ -37,10 +167,11 @@ function Homepage() {
         );
         setMessageType("success");
         form.current?.reset();
+        setErrors({});
       })
       .catch((error) => {
         setSubmitMessage(
-          "❌ Erro ao enviar. Por favor, tente novamente ou entre em contato pelo WhatsApp.",
+          "❌ Erro ao enviar. Tente novamente ou entre em contato pelo WhatsApp.",
         );
         setMessageType("error");
         console.error("Erro:", error);
@@ -237,7 +368,7 @@ function Homepage() {
         </div>
       </section>
 
-      {/* ===== FORMULÁRIO DE SOLICITAÇÃO (EMAILJS) ===== */}
+      {/* ===== FORMULÁRIO DE SOLICITAÇÃO (COM VALIDAÇÃO) ===== */}
       <section className="py-16 bg-white" id="formulario">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
@@ -251,12 +382,38 @@ function Homepage() {
           </div>
 
           <div className="bg-bright-snow rounded-2xl shadow-xl p-8 border border-gray-100">
-            <form ref={form} onSubmit={handleSubmit} className="space-y-6">
+            {/* ✅ Mensagem geral de erro */}
+            {submitMessage &&
+              messageType === "error" &&
+              Object.keys(errors).length === 0 && (
+                <div className="mb-6 p-4 rounded-lg bg-red-50 border border-red-200">
+                  <p className="text-sm font-medium text-red-700">
+                    {submitMessage}
+                  </p>
+                </div>
+              )}
+
+            {/* ✅ Mensagem de sucesso */}
+            {submitMessage && messageType === "success" && (
+              <div className="mb-6 p-4 rounded-lg bg-green-50 border border-green-200">
+                <p className="text-sm font-medium text-green-700">
+                  {submitMessage}
+                </p>
+              </div>
+            )}
+
+            <form
+              ref={form}
+              onSubmit={handleSubmit}
+              className="space-y-6"
+              noValidate
+            >
               <input
                 type="hidden"
                 name="data_envio"
                 value={new Date().toLocaleDateString("pt-BR")}
               />
+
               {/* Campo Nome */}
               <div>
                 <label
@@ -270,8 +427,19 @@ function Homepage() {
                   id="nome"
                   name="nome"
                   placeholder="Digite seu nome completo"
-                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-rich-cerulean focus:border-rich-cerulean transition duration-200 bg-white text-gray-700 placeholder-gray-400"
+                  className={`w-full px-4 py-3 rounded-lg border ${
+                    errors.nome
+                      ? "border-red-400 focus:ring-red-400"
+                      : "border-gray-300 focus:ring-rich-cerulean"
+                  } focus:ring-2 focus:border-transparent transition duration-200 bg-white text-gray-700 placeholder-gray-400`}
+                  onChange={() => setErrors((prev) => ({ ...prev, nome: "" }))}
                 />
+                {errors.nome && (
+                  <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
+                    <AlertCircle className="w-4 h-4" />
+                    {errors.nome}
+                  </p>
+                )}
               </div>
 
               {/* Campo WhatsApp (obrigatório) */}
@@ -288,8 +456,21 @@ function Homepage() {
                   name="whatsapp"
                   required
                   placeholder="(11) 99999-9999"
-                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-rich-cerulean focus:border-rich-cerulean transition duration-200 bg-white text-gray-700 placeholder-gray-400"
+                  className={`w-full px-4 py-3 rounded-lg border ${
+                    errors.whatsapp
+                      ? "border-red-400 focus:ring-red-400"
+                      : "border-gray-300 focus:ring-rich-cerulean"
+                  } focus:ring-2 focus:border-transparent transition duration-200 bg-white text-gray-700 placeholder-gray-400`}
+                  onChange={() =>
+                    setErrors((prev) => ({ ...prev, whatsapp: "" }))
+                  }
                 />
+                {errors.whatsapp && (
+                  <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
+                    <AlertCircle className="w-4 h-4" />
+                    {errors.whatsapp}
+                  </p>
+                )}
               </div>
 
               {/* Campo CPF ou CNPJ (obrigatório) */}
@@ -306,8 +487,21 @@ function Homepage() {
                   name="documento"
                   required
                   placeholder="000.000.000-00 ou 00.000.000/0000-00"
-                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-rich-cerulean focus:border-rich-cerulean transition duration-200 bg-white text-gray-700 placeholder-gray-400"
+                  className={`w-full px-4 py-3 rounded-lg border ${
+                    errors.documento
+                      ? "border-red-400 focus:ring-red-400"
+                      : "border-gray-300 focus:ring-rich-cerulean"
+                  } focus:ring-2 focus:border-transparent transition duration-200 bg-white text-gray-700 placeholder-gray-400`}
+                  onChange={() =>
+                    setErrors((prev) => ({ ...prev, documento: "" }))
+                  }
                 />
+                {errors.documento && (
+                  <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
+                    <AlertCircle className="w-4 h-4" />
+                    {errors.documento}
+                  </p>
+                )}
               </div>
 
               {/* Campo Tipo de Certificado (obrigatório) */}
@@ -322,7 +516,13 @@ function Homepage() {
                   id="tipo-certificado"
                   name="tipo-certificado"
                   required
-                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-rich-cerulean focus:border-rich-cerulean transition duration-200 bg-white text-gray-700"
+                  defaultValue=""
+                  className={`w-full px-4 py-3 rounded-lg border ${
+                    errors.tipo
+                      ? "border-red-400 focus:ring-red-400"
+                      : "border-gray-300 focus:ring-rich-cerulean"
+                  } focus:ring-2 focus:border-transparent transition duration-200 bg-white text-gray-700`}
+                  onChange={() => setErrors((prev) => ({ ...prev, tipo: "" }))}
                 >
                   <option value="" disabled>
                     Selecione o tipo de certificado
@@ -348,28 +548,13 @@ function Homepage() {
                     </option>
                   </optgroup>
                 </select>
-              </div>
-
-              {/* Mensagem de feedback */}
-              {submitMessage && (
-                <div
-                  className={`p-4 rounded-lg ${
-                    messageType === "success"
-                      ? "bg-green-50 border border-green-200"
-                      : "bg-red-50 border border-red-200"
-                  }`}
-                >
-                  <p
-                    className={`text-sm font-medium ${
-                      messageType === "success"
-                        ? "text-green-700"
-                        : "text-red-700"
-                    }`}
-                  >
-                    {submitMessage}
+                {errors.tipo && (
+                  <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
+                    <AlertCircle className="w-4 h-4" />
+                    {errors.tipo}
                   </p>
-                </div>
-              )}
+                )}
+              </div>
 
               {/* Botão de envio */}
               <div className="pt-4">
