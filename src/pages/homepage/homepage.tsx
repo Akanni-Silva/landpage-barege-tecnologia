@@ -1,3 +1,4 @@
+/* eslint-disable prefer-const */
 import {
   BadgeCheck,
   ChevronRight,
@@ -176,7 +177,7 @@ function Homepage() {
   return (
     <div className="bg-bright-snow font-sans">
       {/* ===== SEÇÃO PRINCIPAL (HERO) ===== */}
-      <section className="relative bg-gradient-to-br from-bright-snow to-bright-snow-2 overflow-hidden">
+      <section className="relative bg-linear-to-br from-bright-snow to-bright-snow-2 overflow-hidden">
         <div className="max-w-7xl mx-auto pt-20 pb-24 px-4 sm:px-6 lg:px-8 lg:flex lg:items-center lg:justify-between">
           <div className="lg:w-0 lg:flex-1">
             <h1 className="text-5xl font-extrabold tracking-tight text-yale-blue sm:text-6xl md:text-7xl">
@@ -193,7 +194,7 @@ function Homepage() {
 
             <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div className="flex items-start">
-                <div className="flex-shrink-0 p-3 bg-baby-blue-ice rounded-lg">
+                <div className="shrink-0 p-3 bg-baby-blue-ice rounded-lg">
                   <Zap className="w-6 h-6 text-yale-blue" />
                 </div>
                 <div className="ml-4">
@@ -206,7 +207,7 @@ function Homepage() {
                 </div>
               </div>
               <div className="flex items-start">
-                <div className="flex-shrink-0 p-3 bg-baby-blue-ice rounded-lg">
+                <div className="shrink-0 p-3 bg-baby-blue-ice rounded-lg">
                   <BadgeCheck className="w-6 h-6 text-yale-blue" />
                 </div>
                 <div className="ml-4">
@@ -220,7 +221,7 @@ function Homepage() {
                 </div>
               </div>
               <div className="flex items-start">
-                <div className="flex-shrink-0 p-3 bg-baby-blue-ice rounded-lg">
+                <div className="shrink-0 p-3 bg-baby-blue-ice rounded-lg">
                   <Shield className="w-6 h-6 text-yale-blue" />
                 </div>
                 <div className="ml-4">
@@ -233,7 +234,7 @@ function Homepage() {
                 </div>
               </div>
               <div className="flex items-start">
-                <div className="flex-shrink-0 p-3 bg-baby-blue-ice rounded-lg">
+                <div className="shrink-0 p-3 bg-baby-blue-ice rounded-lg">
                   <FileCheck className="w-6 h-6 text-yale-blue" />
                 </div>
                 <div className="ml-4">
@@ -248,7 +249,7 @@ function Homepage() {
             </div>
           </div>
 
-          <div className="mt-12 lg:mt-0 lg:ml-10 lg:flex-shrink-0">
+          <div className="mt-12 lg:mt-0 lg:ml-10 lg:shrink-0">
             <div className="bg-white p-8 rounded-2xl shadow-xl max-w-md mx-auto lg:mx-0 border border-gray-100">
               <div className="text-center">
                 <Shield className="mx-auto h-16 w-auto text-baby-blue-ice" />
@@ -572,7 +573,7 @@ function Homepage() {
       </section>
 
       {/* ===== WHATSAPP CTA ===== */}
-      <section className="py-16 bg-gradient-to-r from-rich-cerulean to-yale-blue">
+      <section className="py-16 bg-linear-to-r from-rich-cerulean to-yale-blue">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 lg:flex lg:items-center lg:justify-between">
           <div className="lg:w-0 lg:flex-1">
             <h2 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
@@ -637,7 +638,7 @@ function Homepage() {
                 </h3>
                 <ul className="space-y-4">
                   <li className="flex items-center">
-                    <div className="flex-shrink-0 w-8 h-8 bg-baby-blue-ice rounded-full flex items-center justify-center">
+                    <div className="shrink-0 w-8 h-8 bg-baby-blue-ice rounded-full flex items-center justify-center">
                       <ChevronRight className="w-4 h-4 text-yale-blue" />
                     </div>
                     <p className="ml-4 text-gray-600">
@@ -645,7 +646,7 @@ function Homepage() {
                     </p>
                   </li>
                   <li className="flex items-center">
-                    <div className="flex-shrink-0 w-8 h-8 bg-baby-blue-ice rounded-full flex items-center justify-center">
+                    <div className="shrink-0 w-8 h-8 bg-baby-blue-ice rounded-full flex items-center justify-center">
                       <ChevronRight className="w-4 h-4 text-yale-blue" />
                     </div>
                     <p className="ml-4 text-gray-600">
@@ -653,7 +654,7 @@ function Homepage() {
                     </p>
                   </li>
                   <li className="flex items-center">
-                    <div className="flex-shrink-0 w-8 h-8 bg-baby-blue-ice rounded-full flex items-center justify-center">
+                    <div className="shrink-0 w-8 h-8 bg-baby-blue-ice rounded-full flex items-center justify-center">
                       <ChevronRight className="w-4 h-4 text-yale-blue" />
                     </div>
                     <p className="ml-4 text-gray-600">
