@@ -14,32 +14,35 @@ import { companyInfo } from "../../data/companyInfo";
 import { useRef, useState } from "react";
 import { sendForm } from "@emailjs/browser";
 
+// ✅ Interface para os erros de validação
+interface FormErrors {
+  nome?: string;
+  whatsapp?: string;
+  documento?: string;
+  tipo?: string;
+}
+
 function Homepage() {
   const form = useRef<HTMLFormElement>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState("");
   const [messageType, setMessageType] = useState("");
 
-  // ✅ Estados para erros de validação
-  const [errors, setErrors] = useState({});
+  // ✅ Tipagem correta para os erros
+  const [errors, setErrors] = useState<FormErrors>({});
 
-  // ✅ Funções de validação com regex
-  const validarWhatsApp = (valor) => {
+  // ✅ Tipagem dos parâmetros
+  const validarWhatsApp = (valor: string): boolean => {
     const regexWhatsApp = /^\(?\d{2}\)?\s?\d{4,5}-?\d{4}$/;
     return regexWhatsApp.test(valor.replace(/\s/g, ""));
   };
 
-  const validarCPF = (cpf) => {
-    // Remove caracteres não numéricos
+  const validarCPF = (cpf: string): boolean => {
     cpf = cpf.replace(/[^\d]/g, "");
 
-    // Verifica se tem 11 dígitos
     if (cpf.length !== 11) return false;
-
-    // Verifica se todos os dígitos são iguais
     if (/^(\d)\1{10}$/.test(cpf)) return false;
 
-    // Validação do CPF
     let soma = 0;
     for (let i = 0; i < 9; i++) {
       soma += parseInt(cpf.charAt(i)) * (10 - i);
@@ -59,17 +62,12 @@ function Homepage() {
     return parseInt(cpf.charAt(10)) === digito2;
   };
 
-  const validarCNPJ = (cnpj) => {
-    // Remove caracteres não numéricos
+  const validarCNPJ = (cnpj: string): boolean => {
     cnpj = cnpj.replace(/[^\d]/g, "");
 
-    // Verifica se tem 14 dígitos
     if (cnpj.length !== 14) return false;
-
-    // Verifica se todos os dígitos são iguais
     if (/^(\d)\1{13}$/.test(cnpj)) return false;
 
-    // Validação do CNPJ
     const pesos1 = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
     const pesos2 = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
 
@@ -92,7 +90,7 @@ function Homepage() {
     return parseInt(cnpj.charAt(13)) === digito2;
   };
 
-  const validarDocumento = (valor) => {
+  const validarDocumento = (valor: string): boolean => {
     const numeros = valor.replace(/[^\d]/g, "");
 
     if (numeros.length === 11) {
@@ -103,46 +101,41 @@ function Homepage() {
     return false;
   };
 
-  const handleSubmit = (e) => {
+  // ✅ Tipagem do evento
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!form.current) return;
 
-    // ✅ Coletar valores
     const formData = new FormData(form.current);
     const nome = formData.get("nome")?.toString().trim() || "";
     const whatsapp = formData.get("whatsapp")?.toString().trim() || "";
     const documento = formData.get("documento")?.toString().trim() || "";
     const tipo = formData.get("tipo-certificado")?.toString() || "";
 
-    // ✅ Validar campos
-    const newErrors = {};
+    // ✅ Tipagem correta
+    const newErrors: FormErrors = {};
 
-    // Nome: mínimo 3 caracteres
     if (nome.length < 3) {
       newErrors.nome = "Nome deve ter pelo menos 3 caracteres";
     }
 
-    // WhatsApp: formato válido
     if (!whatsapp) {
       newErrors.whatsapp = "WhatsApp é obrigatório";
     } else if (!validarWhatsApp(whatsapp)) {
       newErrors.whatsapp = "Formato inválido. Use: (11) 99999-9999";
     }
 
-    // Documento: CPF ou CNPJ válido
     if (!documento) {
       newErrors.documento = "CPF ou CNPJ é obrigatório";
     } else if (!validarDocumento(documento)) {
       newErrors.documento = "CPF ou CNPJ inválido";
     }
 
-    // Tipo de certificado
     if (!tipo) {
       newErrors.tipo = "Selecione um tipo de certificado";
     }
 
-    // ✅ Se houver erros, mostrar e não enviar
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       setSubmitMessage("❌ Corrija os erros abaixo antes de enviar.");
@@ -150,7 +143,6 @@ function Homepage() {
       return;
     }
 
-    // ✅ Limpar erros e enviar
     setErrors({});
     setIsSubmitting(true);
     setSubmitMessage("");
@@ -287,7 +279,7 @@ function Homepage() {
         </div>
       </section>
 
-      {/* ===== TIPOS DE CERTIFICADO (A1 E A3) ===== */}
+      {/* ===== TIPOS DE CERTIFICADO (A1 E A3) - MANTIDO IGUAL ===== */}
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
@@ -382,7 +374,6 @@ function Homepage() {
           </div>
 
           <div className="bg-bright-snow rounded-2xl shadow-xl p-8 border border-gray-100">
-            {/* ✅ Mensagem geral de erro */}
             {submitMessage &&
               messageType === "error" &&
               Object.keys(errors).length === 0 && (
@@ -393,7 +384,6 @@ function Homepage() {
                 </div>
               )}
 
-            {/* ✅ Mensagem de sucesso */}
             {submitMessage && messageType === "success" && (
               <div className="mb-6 p-4 rounded-lg bg-green-50 border border-green-200">
                 <p className="text-sm font-medium text-green-700">
@@ -442,7 +432,7 @@ function Homepage() {
                 )}
               </div>
 
-              {/* Campo WhatsApp (obrigatório) */}
+              {/* Campo WhatsApp */}
               <div>
                 <label
                   htmlFor="whatsapp"
@@ -473,7 +463,7 @@ function Homepage() {
                 )}
               </div>
 
-              {/* Campo CPF ou CNPJ (obrigatório) */}
+              {/* Campo CPF ou CNPJ */}
               <div>
                 <label
                   htmlFor="documento"
@@ -504,7 +494,7 @@ function Homepage() {
                 )}
               </div>
 
-              {/* Campo Tipo de Certificado (obrigatório) */}
+              {/* Campo Tipo de Certificado */}
               <div>
                 <label
                   htmlFor="tipo-certificado"
@@ -590,8 +580,7 @@ function Homepage() {
             </h2>
             <p className="mt-3 max-w-3xl text-lg text-baby-blue-ice">
               Fale agora mesmo com nossa equipe e garanta seu certificado
-              digital com segurança e rapidez. Atendimento personalizado e sem
-              burocracia.
+              digital com segurança e rapidez.
             </p>
           </div>
           <div className="mt-8 lg:mt-0 lg:ml-8">
@@ -628,7 +617,6 @@ function Homepage() {
               <p className="mt-4 text-lg text-gray-600">
                 Você indica, nós cuidamos de todo o processo. Receba por cada
                 emissão e renovação de certificado digital dos seus clientes.
-                Simples e sem complicação.
               </p>
               <div className="mt-8 flex flex-col sm:flex-row gap-4">
                 <a
@@ -669,8 +657,7 @@ function Homepage() {
                       <ChevronRight className="w-4 h-4 text-yale-blue" />
                     </div>
                     <p className="ml-4 text-gray-600">
-                      Atendimento exclusivo e personalizado para você e seus
-                      clientes.
+                      Atendimento exclusivo e personalizado.
                     </p>
                   </li>
                 </ul>

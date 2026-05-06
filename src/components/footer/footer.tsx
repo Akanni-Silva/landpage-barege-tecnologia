@@ -1,4 +1,3 @@
-import React from "react";
 import { companyInfo } from "../../data/companyInfo";
 import { Shield } from "lucide-react";
 
