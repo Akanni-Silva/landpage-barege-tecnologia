@@ -1,11 +1,4 @@
-export type CompanyInfo = {
-  name: string;
-  address: string;
-  email: string;
-  instagram: string;
-  whatsappNumber: string;
-  whatsappLink: string;
-};
+import type { CompanyInfo } from "../models/tipocompany";
 
 export const companyInfo: CompanyInfo = {
   name: "Barege Tecnologia",
