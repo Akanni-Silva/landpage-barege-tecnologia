@@ -10,6 +10,7 @@ function Navbar() {
   const navLinks = [
     { name: "Produtos", path: "/produtos" },
     { name: "Como Funciona", path: "/como-funciona" },
+    { name: "Sobre Nós", path: "/sobre-nos" },
     { name: "Contato", path: "/contato" },
     { name: "Parceiros", path: "/parceiros" },
   ];

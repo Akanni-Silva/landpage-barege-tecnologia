@@ -8,6 +8,7 @@ import Parceiros from "./pages/parceiros/parceiros";
 import Home from "./pages/home/home";
 import Produtos from "./pages/produtos/produtos";
 import Solicitacao from "./pages/solicitacao/solicitacao";
+import SobreNos from "./pages/sobre/sobreNos";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
               <Route path="/como-funciona" element={<ComoFunciona />} />
               <Route path="/contato" element={<Contato />} />
               <Route path="/parceiros" element={<Parceiros />} />
+              <Route path="/sobre-nos" element={<SobreNos />} />
             </Routes>
           </main>
           <Footer />
