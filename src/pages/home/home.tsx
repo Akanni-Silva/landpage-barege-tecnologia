@@ -72,7 +72,7 @@ function Home() {
     <>
       {/* ===== HERO ===== */}
       {/* Versão Mobile/Tablet - Gradiente com CTA simples */}
-      <section className="block md:hidden bg-gradient-to-br from-yale-blue to-rich-cerulean py-20">
+      <section className="block md:hidden bg-linear-to-br from-yale-blue to-rich-cerulean py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-3xl sm:text-4xl font-extrabold text-white mb-6">
             Certificado Digital
@@ -154,7 +154,7 @@ function Home() {
       </section>
 
       {/* ===== BARRA DE CTAs (apenas no desktop) ===== */}
-      <section className="hidden md:block bg-gradient-to-r from-yale-blue to-rich-cerulean py-6">
+      <section className="hidden md:block bg-linear-to-r from-yale-blue to-rich-cerulean py-6">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
@@ -223,7 +223,7 @@ function Home() {
                 <ul className="space-y-2 mb-6 text-sm">
                   {produto.caracteristicas.map((feature, index) => (
                     <li key={index} className="flex items-start gap-2">
-                      <BadgeCheck className="w-4 h-4 text-rich-cerulean mt-0.5 flex-shrink-0" />
+                      <BadgeCheck className="w-4 h-4 text-rich-cerulean mt-0.5 shrink-0" />
                       <span className="text-gray-600">{feature}</span>
                     </li>
                   ))}
@@ -270,7 +270,7 @@ function Home() {
                 <ul className="space-y-2 mb-6 text-sm">
                   {produto.caracteristicas.map((feature, index) => (
                     <li key={index} className="flex items-start gap-2">
-                      <BadgeCheck className="w-4 h-4 text-rich-cerulean mt-0.5 flex-shrink-0" />
+                      <BadgeCheck className="w-4 h-4 text-rich-cerulean mt-0.5 shrink-0" />
                       <span className="text-gray-600">{feature}</span>
                     </li>
                   ))}
@@ -287,7 +287,7 @@ function Home() {
 
             {/* CARD 3 */}
 
-            <div className="bg-gradient-to-br from-yale-blue to-rich-cerulean rounded-2xl p-6 shadow-md hover:shadow-xl transition-shadow duration-300 border border-rich-cerulean text-white">
+            <div className="bg-linear-to-br from-yale-blue to-rich-cerulean rounded-2xl p-6 shadow-md hover:shadow-xl transition-shadow duration-300 border border-rich-cerulean text-white">
               <div className="text-center mb-6">
                 <Search className="w-10 h-10 text-baby-blue-ice mx-auto mb-3" />
                 <h3 className="text-xl font-bold mb-2">

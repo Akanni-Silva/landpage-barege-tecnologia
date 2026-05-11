@@ -72,7 +72,7 @@ function SobreNos() {
   return (
     <div className="bg-bright-snow">
       {/* ===== BANNER ===== */}
-      <section className="bg-gradient-to-br from-yale-blue to-rich-cerulean py-24">
+      <section className="bg-linear-to-br from-yale-blue to-rich-cerulean py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-white mb-6">
             Tecnologia que impulsiona o seu negócio e simplifica sua gestão.
@@ -129,7 +129,7 @@ function SobreNos() {
               </Link>
             </div>
             <div className="relative">
-              <div className="aspect-square bg-gradient-to-br from-baby-blue-ice to-rich-cerulean rounded-2xl flex items-center justify-center">
+              <div className="aspect-square bg-linear-to-br from-baby-blue-ice to-rich-cerulean rounded-2xl flex items-center justify-center">
                <img  src="/src/assets/baregeLogo.png" alt="Logo barege tecnologia"  />
               </div>
               <div className="absolute -bottom-4 -right-4 bg-yale-blue text-white rounded-2xl p-6 shadow-xl">
@@ -244,7 +244,7 @@ function SobreNos() {
       </section>
 
       {/* ===== MANIFESTO / FECHAMENTO ===== */}
-      <section className="py-20 bg-gradient-to-r from-rich-cerulean to-yale-blue">
+      <section className="py-20 bg-linear-to-r from-rich-cerulean to-yale-blue">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <Globe className="w-16 h-16 text-baby-blue-ice mx-auto mb-6" />
           <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-6">

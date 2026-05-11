@@ -289,7 +289,7 @@ function Solicitacao() {
   return (
     <div className="bg-bright-snow">
       {/* Banner */}
-      <section className="bg-gradient-to-br from-yale-blue to-rich-cerulean py-16">
+      <section className="bg-linear-to-br from-yale-blue to-rich-cerulean py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl font-extrabold text-white mb-4">
             Solicite seu Certificado Digital
@@ -677,7 +677,7 @@ function Solicitacao() {
                       shadow-xl
                       animate-pulse-borda
                       transition-all duration-700 ease-in-out
-                      bg-gradient-to-br from-bright-snow to-white
+                      bg-linear-to-br from-bright-snow to-white
                       flex items-center justify-center
                       overflow-hidden
                     `}
@@ -816,7 +816,7 @@ function Solicitacao() {
                   w-32 h-32 rounded-full 
                   border-4 ${midiaVisual.corBorda} ${midiaVisual.corSombra}
                   shadow-xl
-                  bg-gradient-to-br from-bright-snow to-white
+                  bg-linear-to-br from-bright-snow to-white
                   flex items-center justify-center
                   overflow-hidden
                 `}
@@ -851,7 +851,7 @@ function Solicitacao() {
                     key={i}
                     className="flex items-start gap-2 text-sm text-gray-600"
                   >
-                    <Zap className="w-4 h-4 text-rich-cerulean mt-0.5 flex-shrink-0" />
+                    <Zap className="w-4 h-4 text-rich-cerulean mt-0.5 shrink-0" />
                     {beneficio}
                   </li>
                 ))}
