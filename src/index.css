@@ -1,3 +1,4 @@
+/* src/index.css */
 @import "tailwindcss";
 
 @theme {
@@ -6,4 +7,51 @@
   --color-yale-blue: #224f75;
   --color-bright-snow: #f6f6f6;
   --color-bright-snow-2: #f8f8f7;
+}
+
+/* ✅ Animação de pulsação na borda */
+@keyframes pulse-borda {
+  0%,
+  100% {
+    box-shadow: 0 0 15px rgba(34, 79, 117, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(34, 79, 117, 0.5),
+      0 0 60px rgba(65, 113, 156, 0.2);
+  }
+}
+
+/* ✅ Animação de rotação lenta no anel de brilho */
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ✅ Animação de fade-in na imagem */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ✅ Classes utilitárias para as animações */
+.animate-pulse-borda {
+  animation: pulse-borda 3s ease-in-out infinite;
+}
+
+.animate-spin-slow {
+  animation: spin-slow 8s linear infinite;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.5s ease-out forwards;
 }

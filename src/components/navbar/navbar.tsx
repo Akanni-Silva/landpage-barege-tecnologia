@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Shield, MessageCircle, Menu, X, FileCheck } from "lucide-react";
+import { MessageCircle, Menu, X, FileCheck } from "lucide-react";
 import { companyInfo } from "../../data";
+import baregeLogo from "../../assets/baregeLogo.png";
 
 function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -21,7 +22,7 @@ function Navbar() {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center">
-            <Shield className="h-8 w-8 text-rich-cerulean" />
+            <img src={baregeLogo} alt="logo da barege tecnologia" className="h-12 w-auto" />
             <span className="ml-2 text-xl font-bold text-yale-blue">
               {companyInfo.name}
             </span>

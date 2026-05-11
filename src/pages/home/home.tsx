@@ -15,12 +15,45 @@ import {
   Phone,
   MessageCircle,
   Mail,
+  ChevronLeft,
 } from "lucide-react";
 import { companyInfo, produtosDestaque } from "../../data";
 import { formatPrice } from "../../utils";
 
+import banner1 from "../../assets/banner-1-hero-barege.png";
+import banner2 from "../../assets/banner-2-produtos-barege.png";
+import banner3 from "../../assets/banner-3-sobre-barege.png";
+import { useEffect, useState } from "react";
+
 function Home() {
-  // Categorias de certificados
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  const banners = [
+    { id: 1, image: banner1, alt: "Banner Hero Barege" },
+    { id: 2, image: banner2, alt: "Banner Produtos Barege" },
+    { id: 3, image: banner3, alt: "Banner Sobre Barege" },
+  ];
+
+  // Autoplay
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % banners.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const goToSlide = (index: number) => {
+    setCurrentSlide(index);
+  };
+
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % banners.length);
+  };
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + banners.length) % banners.length);
+  };
+
   const categorias = [
     { icon: CreditCard, nome: "e-CPF", desc: "Pessoa Física" },
     { icon: Building, nome: "e-CNPJ", desc: "Pessoa Jurídica" },
@@ -38,27 +71,104 @@ function Home() {
   return (
     <>
       {/* ===== HERO ===== */}
-      <section className="bg-gradient-to-br from-yale-blue to-rich-cerulean py-20">
+      {/* Versão Mobile/Tablet - Gradiente com CTA simples */}
+      <section className="block md:hidden bg-gradient-to-br from-yale-blue to-rich-cerulean py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-white mb-6">
-            Compre Online seu Certificado Digital
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-white mb-6">
+            Certificado Digital
           </h1>
-          <p className="text-xl text-baby-blue-ice max-w-3xl mx-auto mb-10">
-            Conheça os Certificados Digitais mais vendidos com até 15% de
-            desconto, pagando em até 12 vezes no cartão de crédito
+          <p className="text-lg text-baby-blue-ice max-w-2xl mx-auto mb-8">
+            Compre e use o seu agora
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <Link
-              to="/produtos"
+              to="/solicitacao"
               className="px-8 py-4 bg-white text-yale-blue font-semibold rounded-full hover:bg-bright-snow transition shadow-lg"
+            >
+              Solicitar Agora
+            </Link>
+            <Link
+              to="/produtos"
+              className="px-8 py-4 border-2 border-white text-white font-semibold rounded-full hover:bg-white/10 transition"
             >
               Ver Produtos
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Versão Desktop - Carrossel de banners */}
+      <section className="hidden md:block relative h-[600px] overflow-hidden">
+        {/* Slides */}
+        <div className="absolute inset-0">
+          {banners.map((banner, index) => (
+            <div
+              key={banner.id}
+              className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+                index === currentSlide ? "opacity-100" : "opacity-0"
+              }`}
+            >
+              <img
+                src={banner.image}
+                alt={banner.alt}
+                className="w-full h-full object-cover"
+              />
+            </div>
+          ))}
+        </div>
+
+        {/* Overlay sutil para as setas ficarem visíveis */}
+        <div className="absolute inset-0 bg-black/10" />
+
+        {/* Setas de navegação */}
+        <button
+          onClick={prevSlide}
+          className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-white/20 hover:bg-white/40 text-white rounded-full p-3 transition backdrop-blur-sm"
+          aria-label="Slide anterior"
+        >
+          <ChevronLeft className="w-5 h-5" />
+        </button>
+        <button
+          onClick={nextSlide}
+          className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-white/20 hover:bg-white/40 text-white rounded-full p-3 transition backdrop-blur-sm"
+          aria-label="Próximo slide"
+        >
+          <ChevronRight className="w-5 h-5" />
+        </button>
+
+        {/* Dots */}
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex gap-3">
+          {banners.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => goToSlide(index)}
+              className={`h-2.5 rounded-full transition-all duration-300 ${
+                index === currentSlide
+                  ? "bg-white w-10"
+                  : "bg-white/50 w-2.5 hover:bg-white/70"
+              }`}
+              aria-label={`Ir para slide ${index + 1}`}
+            />
+          ))}
+        </div>
+      </section>
+
+      {/* ===== BARRA DE CTAs (apenas no desktop) ===== */}
+      <section className="hidden md:block bg-gradient-to-r from-yale-blue to-rich-cerulean py-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
               to="/solicitacao"
-              className="px-8 py-4 border-2 border-white text-white font-semibold rounded-full hover:bg-white/10 transition"
+              className="w-full sm:w-auto px-8 py-3 bg-white text-yale-blue font-semibold rounded-full hover:bg-bright-snow transition shadow-lg text-center flex items-center justify-center gap-2"
             >
-              Solicitar Agora
+              Solicitar Certificado
+              <ChevronRight className="w-4 h-4" />
+            </Link>
+            <Link
+              to="/produtos"
+              className="w-full sm:w-auto px-8 py-3 border-2 border-white text-white font-semibold rounded-full hover:bg-white/10 transition text-center"
+            >
+              Ver Todos os Produtos
             </Link>
           </div>
         </div>
@@ -192,7 +302,9 @@ function Home() {
                 {categorias.slice(0, 2).map((cat, i) => (
                   <Link
                     key={i}
-                    to={`/solicitacao?categoria=${cat.nome.toLowerCase().replace(/\s/g, "-")}`}
+                    to={`/solicitacao?categoria=${cat.nome
+                      .toLowerCase()
+                      .replace(/\s/g, "-")}`}
                     className="flex items-center justify-between p-2 rounded-lg hover:bg-white/10 transition"
                   >
                     <div className="flex items-center gap-2">
@@ -206,7 +318,9 @@ function Home() {
                 {categorias.slice(2).map((cat, i) => (
                   <Link
                     key={i}
-                    to={`/solicitacao?categoria=${cat.nome.toLowerCase().replace(/\s/g, "-")}`}
+                    to={`/solicitacao?categoria=${cat.nome
+                      .toLowerCase()
+                      .replace(/\s/g, "-")}`}
                     className="flex items-center justify-between p-2 rounded-lg hover:bg-white/10 transition"
                   >
                     <div className="flex items-center gap-2">

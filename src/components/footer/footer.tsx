@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
-import { Shield, Percent } from "lucide-react";
+import { Percent } from "lucide-react";
 import { companyInfo } from "../../data/companyInfo";
+import baregeLogo from "../../assets/baregeLogo.png";
 
 function Footer() {
   return (
@@ -10,7 +11,11 @@ function Footer() {
           {/* Logo e descrição */}
           <div>
             <Link to="/" className="flex items-center mb-4">
-              <Shield className="h-8 w-8 text-baby-blue-ice" />
+              <img
+                src={baregeLogo}
+                alt="logo da barege tecnologia"
+                className="h-12 w-auto"
+              />
               <span className="ml-2 text-xl font-bold text-white">
                 {companyInfo.name}
               </span>

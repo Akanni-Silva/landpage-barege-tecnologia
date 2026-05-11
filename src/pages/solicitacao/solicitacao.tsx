@@ -21,6 +21,12 @@ import {
   CreditCardIcon,
   Usb,
   Clock,
+  Info,
+  X,
+  BadgeCheck,
+  Zap,
+  Globe,
+  Headphones,
 } from "lucide-react";
 import {
   midiasCertificado,
@@ -29,6 +35,11 @@ import {
 } from "../../data";
 import type { FormErrors } from "../../models";
 import { formatPrice, validarDocumento, validarTelefone } from "../../utils";
+
+import imgEcnpjA3Cartao from "../../assets/e-cnpj-a3-cartao-1-ano-barege1-161279485263-removebg-preview.png";
+import imgEcpfA1SemMidia from "../../assets/e-cpf-a1-sem-midia-1-ano-barege1-161279647778.png";
+import imgEcpfA3CartaoLeitora from "../../assets/e-cpf-a3-cartao-com-leitora-1-ano-certbank-1-161274454851.png";
+import imgEcpfA3Token from "../../assets/e-cpf-a3-token-1-ano-certbank-1-161274464487.png";
 
 const iconeMap: Record<string, React.ComponentType<{ className?: string }>> = {
   User,
@@ -40,6 +51,99 @@ const iconeMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Usb,
   Clock,
   Calendar,
+};
+
+const midiaVisualMap: Record<
+  string,
+  {
+    imagem: string;
+    corBorda: string;
+    corSombra: string;
+    titulo: string;
+    descricao: string;
+    beneficios: string[];
+  }
+> = {
+  "a1-sem-midia": {
+    imagem: imgEcpfA1SemMidia,
+    corBorda: "border-green-400",
+    corSombra: "shadow-green-200",
+    titulo: "A1 - Sem Mídia",
+    descricao:
+      "O Certificado A1 é um arquivo digital instalado diretamente no seu computador. É a opção mais prática e econômica para quem busca agilidade no dia a dia.",
+    beneficios: [
+      "Instalação rápida no computador",
+      "Ideal para uso em um único dispositivo",
+      "Sem necessidade de hardware adicional",
+      "Perfeito para MEI e uso pessoal",
+      "Validade de 1 ano com renovação simples",
+      "Emissão 100% online por videoconferência",
+    ],
+  },
+  "a3-sem-midia": {
+    imagem: imgEcpfA1SemMidia,
+    corBorda: "border-blue-400",
+    corSombra: "shadow-blue-200",
+    titulo: "A3 - Sem Mídia",
+    descricao:
+      "O Certificado A3 sem mídia física oferece segurança avançada com armazenamento em nuvem. Ideal para quem precisa de mobilidade sem carregar dispositivos.",
+    beneficios: [
+      "Armazenamento seguro em nuvem",
+      "Acesso de qualquer dispositivo",
+      "Sem risco de perda física",
+      "Validade estendida de até 2 anos",
+      "Alta segurança criptográfica",
+      "Emissão presencial ou videoconferência",
+    ],
+  },
+  "a3-cartao": {
+    imagem: imgEcnpjA3Cartao,
+    corBorda: "border-yale-blue",
+    corSombra: "shadow-blue-300",
+    titulo: "A3 - Cartão",
+    descricao:
+      "O Certificado A3 em cartão criptográfico é a escolha ideal para empresas que precisam de segurança física e validade jurídica para transações fiscais.",
+    beneficios: [
+      "Cartão criptográfico com chip de segurança",
+      "Homologado pela ICP-Brasil",
+      "Ideal para emissão de NF-e e CT-e",
+      "Validade de 1 ou 2 anos",
+      "Portátil e fácil de transportar",
+      "Emissão presencial ou videoconferência",
+    ],
+  },
+  "a3-cartao-leitora": {
+    imagem: imgEcpfA3CartaoLeitora,
+    corBorda: "border-purple-400",
+    corSombra: "shadow-purple-200",
+    titulo: "A3 - Cartão com Leitora",
+    descricao:
+      "Kit completo com cartão criptográfico e leitora USB. A solução mais completa para empresas que precisam de máxima compatibilidade e segurança.",
+    beneficios: [
+      "Kit completo: cartão + leitora USB",
+      "Compatibilidade com qualquer computador",
+      "Não requer entrada para smart card",
+      "Segurança máxima para transações",
+      "Ideal para escritórios contábeis",
+      "Emissão presencial ou videoconferência",
+    ],
+  },
+  "a3-token": {
+    imagem: imgEcpfA3Token,
+    corBorda: "border-amber-400",
+    corSombra: "shadow-amber-200",
+    titulo: "A3 - Token USB",
+    descricao:
+      "O Token USB é um dispositivo criptográfico portátil que oferece o mais alto nível de segurança. Conecte e assine documentos digitais com máxima proteção.",
+    beneficios: [
+      "Dispositivo USB plug-and-play",
+      "Máxima segurança criptográfica",
+      "Portátil - cabe no chaveiro",
+      "Compatível com Windows e Mac",
+      "Ideal para múltiplos certificados",
+      "Emissão presencial ou videoconferência",
+    ],
+  },
 };
 
 const getValoresIniciais = (produtoSelecionado: string | null) => {
@@ -56,6 +160,8 @@ const getValoresIniciais = (produtoSelecionado: string | null) => {
 
   if (produtoSelecionado.includes("a1")) midia = "a1-sem-midia";
   else if (produtoSelecionado.includes("a3-token")) midia = "a3-token";
+  else if (produtoSelecionado.includes("a3-cartao-leitora"))
+    midia = "a3-cartao-leitora";
   else if (produtoSelecionado.includes("a3-cartao")) midia = "a3-cartao";
   else if (produtoSelecionado.includes("a3")) midia = "a3-sem-midia";
 
@@ -78,18 +184,25 @@ function Solicitacao() {
 
   const [step, setStep] = useState(produtoSelecionado ? 4 : 1);
   const [tipoEscolhido, setTipoEscolhido] = useState<string>(
-    valoresIniciais.tipo,
+    valoresIniciais.tipo
   );
   const [midiaEscolhida, setMidiaEscolhida] = useState<string>(
-    valoresIniciais.midia,
+    valoresIniciais.midia
   );
   const [validadeEscolhida, setValidadeEscolhida] = useState<string>(
-    valoresIniciais.validade,
+    valoresIniciais.validade
   );
+
+  // ✅ Estado do modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const midiaVisual = midiaEscolhida
+    ? midiaVisualMap[midiaEscolhida] || null
+    : null;
 
   const renderIcon = (
     iconeNome: string,
-    className: string = "w-8 h-8 text-rich-cerulean",
+    className: string = "w-8 h-8 text-rich-cerulean"
   ) => {
     const IconComponent = iconeMap[iconeNome];
     if (!IconComponent) return <Shield className={className} />;
@@ -100,7 +213,7 @@ function Solicitacao() {
     const tipo = tiposCertificado.find((t) => t.id === tipoEscolhido);
     const midia = midiasCertificado.find((m) => m.id === midiaEscolhida);
     const validade = validadesCertificado.find(
-      (v) => v.id === validadeEscolhida,
+      (v) => v.id === validadeEscolhida
     );
 
     if (!tipo || !midia || !validade) return 0;
@@ -151,11 +264,11 @@ function Solicitacao() {
       "service_owuos8i",
       "template_omknf2m",
       form.current,
-      "_FstKZ8T_TaD7uNMf",
+      "_FstKZ8T_TaD7uNMf"
     )
       .then(() => {
         setSubmitMessage(
-          "✅ Solicitação enviada com sucesso! Entraremos em contato em breve.",
+          "✅ Solicitação enviada com sucesso! Entraremos em contato em breve."
         );
         setMessageType("success");
         form.current?.reset();
@@ -176,7 +289,7 @@ function Solicitacao() {
   return (
     <div className="bg-bright-snow">
       {/* Banner */}
-      <section className="bg-linear-to-br from-yale-blue to-rich-cerulean py-16">
+      <section className="bg-gradient-to-br from-yale-blue to-rich-cerulean py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl font-extrabold text-white mb-4">
             Solicite seu Certificado Digital
@@ -207,7 +320,9 @@ function Solicitacao() {
                     </div>
                     {s < 4 && (
                       <div
-                        className={`w-12 h-0.5 ${step > s ? "bg-yale-blue" : "bg-gray-200"}`}
+                        className={`w-12 h-0.5 ${
+                          step > s ? "bg-yale-blue" : "bg-gray-200"
+                        }`}
                       />
                     )}
                   </div>
@@ -244,7 +359,7 @@ function Solicitacao() {
                       >
                         {renderIcon(
                           t.icone,
-                          "w-10 h-10 text-rich-cerulean mb-3",
+                          "w-10 h-10 text-rich-cerulean mb-3"
                         )}
                         <h3 className="text-lg font-bold text-yale-blue">
                           {t.nome}
@@ -276,40 +391,49 @@ function Solicitacao() {
                     </h2>
                   </div>
                   <div className="space-y-3">
-                    {midiasCertificado.map((m) => (
-                      <button
-                        key={m.id}
-                        onClick={() => {
-                          setMidiaEscolhida(m.id);
-                          setStep(3);
-                        }}
-                        className={`w-full p-4 rounded-2xl border-2 text-left flex items-center gap-4 transition ${
-                          midiaEscolhida === m.id
-                            ? "border-yale-blue bg-blue-50"
-                            : "border-gray-200 hover:border-rich-cerulean"
-                        }`}
-                      >
-                        {renderIcon(
-                          m.icone,
-                          "w-8 h-8 text-rich-cerulean flex-shrink-0",
-                        )}
-                        <div className="grow">
-                          <h3 className="font-bold text-yale-blue">{m.nome}</h3>
-                          <p className="text-sm text-gray-500">{m.descricao}</p>
-                        </div>
-                        <div className="text-right shrink-0">
-                          {m.adicional > 0 ? (
-                            <span className="text-sm font-semibold text-yale-blue">
-                              + {formatPrice(m.adicional)}
-                            </span>
-                          ) : (
-                            <span className="text-sm text-green-600 font-semibold">
-                              Incluso
-                            </span>
+                    {midiasCertificado.map((m) => {
+                      const visual = midiaVisualMap[m.id];
+                      return (
+                        <button
+                          key={m.id}
+                          onClick={() => {
+                            setMidiaEscolhida(m.id);
+                            setStep(3);
+                          }}
+                          className={`w-full p-4 rounded-2xl border-2 text-left flex items-center gap-4 transition ${
+                            midiaEscolhida === m.id
+                              ? `${
+                                  visual?.corBorda || "border-yale-blue"
+                                } bg-blue-50`
+                              : "border-gray-200 hover:border-rich-cerulean"
+                          }`}
+                        >
+                          {renderIcon(
+                            m.icone,
+                            "w-8 h-8 text-rich-cerulean flex-shrink-0"
                           )}
-                        </div>
-                      </button>
-                    ))}
+                          <div className="grow">
+                            <h3 className="font-bold text-yale-blue">
+                              {m.nome}
+                            </h3>
+                            <p className="text-sm text-gray-500">
+                              {m.descricao}
+                            </p>
+                          </div>
+                          <div className="text-right shrink-0">
+                            {m.adicional > 0 ? (
+                              <span className="text-sm font-semibold text-yale-blue">
+                                + {formatPrice(m.adicional)}
+                              </span>
+                            ) : (
+                              <span className="text-sm text-green-600 font-semibold">
+                                Incluso
+                              </span>
+                            )}
+                          </div>
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
               )}
@@ -344,7 +468,7 @@ function Solicitacao() {
                       >
                         {renderIcon(
                           v.icone,
-                          "w-8 h-8 text-rich-cerulean flex-shrink-0",
+                          "w-8 h-8 text-rich-cerulean flex-shrink-0"
                         )}
                         <div className="grow">
                           <h3 className="font-bold text-yale-blue">{v.nome}</h3>
@@ -404,7 +528,9 @@ function Solicitacao() {
                     <input
                       type="hidden"
                       name="pedido"
-                      value={`${tipo?.nome} | ${midia?.nome} | ${validade?.nome} | ${formatPrice(precoFinal)}`}
+                      value={`${tipo?.nome} | ${midia?.nome} | ${
+                        validade?.nome
+                      } | ${formatPrice(precoFinal)}`}
                     />
                     <input
                       type="hidden"
@@ -420,7 +546,9 @@ function Solicitacao() {
                         type="text"
                         name="nome"
                         placeholder="Digite seu nome completo"
-                        className={`w-full px-4 py-3 rounded-lg border ${errors.nome ? "border-red-400" : "border-gray-300"} focus:ring-2 focus:ring-rich-cerulean transition bg-white`}
+                        className={`w-full px-4 py-3 rounded-lg border ${
+                          errors.nome ? "border-red-400" : "border-gray-300"
+                        } focus:ring-2 focus:ring-rich-cerulean transition bg-white`}
                         onChange={() =>
                           setErrors((prev) => ({ ...prev, nome: "" }))
                         }
@@ -442,7 +570,9 @@ function Solicitacao() {
                           type="email"
                           name="email"
                           placeholder="seu@email.com"
-                          className={`w-full px-4 py-3 rounded-lg border ${errors.email ? "border-red-400" : "border-gray-300"} focus:ring-2 focus:ring-rich-cerulean transition bg-white`}
+                          className={`w-full px-4 py-3 rounded-lg border ${
+                            errors.email ? "border-red-400" : "border-gray-300"
+                          } focus:ring-2 focus:ring-rich-cerulean transition bg-white`}
                           onChange={() =>
                             setErrors((prev) => ({ ...prev, email: "" }))
                           }
@@ -462,7 +592,11 @@ function Solicitacao() {
                           type="tel"
                           name="telefone"
                           placeholder="(11) 99999-9999"
-                          className={`w-full px-4 py-3 rounded-lg border ${errors.telefone ? "border-red-400" : "border-gray-300"} focus:ring-2 focus:ring-rich-cerulean transition bg-white`}
+                          className={`w-full px-4 py-3 rounded-lg border ${
+                            errors.telefone
+                              ? "border-red-400"
+                              : "border-gray-300"
+                          } focus:ring-2 focus:ring-rich-cerulean transition bg-white`}
                           onChange={() =>
                             setErrors((prev) => ({ ...prev, telefone: "" }))
                           }
@@ -484,7 +618,11 @@ function Solicitacao() {
                         type="text"
                         name="documento"
                         placeholder="000.000.000-00 ou 00.000.000/0000-00"
-                        className={`w-full px-4 py-3 rounded-lg border ${errors.documento ? "border-red-400" : "border-gray-300"} focus:ring-2 focus:ring-rich-cerulean transition bg-white`}
+                        className={`w-full px-4 py-3 rounded-lg border ${
+                          errors.documento
+                            ? "border-red-400"
+                            : "border-gray-300"
+                        } focus:ring-2 focus:ring-rich-cerulean transition bg-white`}
                         onChange={() =>
                           setErrors((prev) => ({ ...prev, documento: "" }))
                         }
@@ -520,13 +658,58 @@ function Solicitacao() {
             </div>
           </div>
 
-          {/* Coluna lateral - Preço */}
+          {/* Coluna lateral */}
           <div className="space-y-6">
+            {/* Card de Resumo do Pedido */}
             <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 sticky top-24">
               <h3 className="text-lg font-bold text-yale-blue mb-4">
                 <Wallet className="w-5 h-5 inline mr-2" />
                 Resumo do Pedido
               </h3>
+
+              {/* Imagem do produto com animação */}
+              {midiaVisual && (
+                <div className="relative flex justify-center mb-6">
+                  <div
+                    className={`
+                      relative w-40 h-40 sm:w-44 sm:h-44 rounded-full 
+                      border-4 ${midiaVisual.corBorda} ${midiaVisual.corSombra}
+                      shadow-xl
+                      animate-pulse-borda
+                      transition-all duration-700 ease-in-out
+                      bg-gradient-to-br from-bright-snow to-white
+                      flex items-center justify-center
+                      overflow-hidden
+                    `}
+                  >
+                    <img
+                      src={midiaVisual.imagem}
+                      alt={midia?.nome || "Produto selecionado"}
+                      className="w-28 h-28 sm:w-32 sm:h-32 object-contain animate-fade-in"
+                    />
+                    <div
+                      className={`
+                        absolute inset-0 rounded-full
+                        border-2 ${midiaVisual.corBorda.replace(
+                          "border-",
+                          "border-"
+                        )}/30
+                        animate-spin-slow
+                      `}
+                    />
+                  </div>
+
+                  {/* ✅ Botão flutuante de informações */}
+                  <button
+                    onClick={() => setIsModalOpen(true)}
+                    className="absolute -bottom-1 -right-1 w-10 h-10 bg-yale-blue text-white rounded-full flex items-center justify-center shadow-lg hover:bg-rich-cerulean transition transform hover:scale-110"
+                    title="Saiba mais sobre este produto"
+                  >
+                    <Info className="w-5 h-5" />
+                  </button>
+                </div>
+              )}
+
               {tipo && midia && validade ? (
                 <div className="space-y-3">
                   <div className="flex justify-between text-sm">
@@ -556,7 +739,12 @@ function Solicitacao() {
                         Desconto {validade.desconto}%
                       </span>
                       <span className="text-green-600">
-                        - {formatPrice(precoFinal * (validade.desconto / 100))}
+                        -{" "}
+                        {formatPrice(
+                          (tipo.precoBase + midia.adicional) *
+                            validade.multiplicador *
+                            (validade.desconto / 100)
+                        )}
                       </span>
                     </div>
                   )}
@@ -579,6 +767,7 @@ function Solicitacao() {
               )}
             </div>
 
+            {/* ✅ Seção Como Funciona RESTAURADA */}
             <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
               <h3 className="text-lg font-bold text-yale-blue mb-4">
                 Como Funciona
@@ -600,6 +789,102 @@ function Solicitacao() {
           </div>
         </div>
       </div>
+
+      {/* ✅ MODAL DE DESCRIÇÃO DO PRODUTO */}
+      {isModalOpen && midiaVisual && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          {/* Overlay */}
+          <div
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            onClick={() => setIsModalOpen(false)}
+          />
+
+          {/* Conteúdo do Modal */}
+          <div className="relative bg-white rounded-2xl shadow-2xl max-w-lg w-full p-8 z-10 animate-fade-in">
+            {/* Botão fechar */}
+            <button
+              onClick={() => setIsModalOpen(false)}
+              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition"
+            >
+              <X className="w-6 h-6" />
+            </button>
+
+            {/* Imagem do produto */}
+            <div className="flex justify-center mb-6">
+              <div
+                className={`
+                  w-32 h-32 rounded-full 
+                  border-4 ${midiaVisual.corBorda} ${midiaVisual.corSombra}
+                  shadow-xl
+                  bg-gradient-to-br from-bright-snow to-white
+                  flex items-center justify-center
+                  overflow-hidden
+                `}
+              >
+                <img
+                  src={midiaVisual.imagem}
+                  alt={midiaVisual.titulo}
+                  className="w-24 h-24 object-contain"
+                />
+              </div>
+            </div>
+
+            {/* Título */}
+            <h2 className="text-2xl font-bold text-yale-blue text-center mb-3">
+              {midiaVisual.titulo}
+            </h2>
+
+            {/* Descrição */}
+            <p className="text-gray-600 text-center mb-6 leading-relaxed">
+              {midiaVisual.descricao}
+            </p>
+
+            {/* Benefícios */}
+            <div className="bg-bright-snow rounded-xl p-5 mb-6">
+              <h3 className="text-sm font-semibold text-yale-blue mb-3 flex items-center gap-2">
+                <BadgeCheck className="w-4 h-4" />
+                Benefícios
+              </h3>
+              <ul className="space-y-2">
+                {midiaVisual.beneficios.map((beneficio, i) => (
+                  <li
+                    key={i}
+                    className="flex items-start gap-2 text-sm text-gray-600"
+                  >
+                    <Zap className="w-4 h-4 text-rich-cerulean mt-0.5 flex-shrink-0" />
+                    {beneficio}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Diferenciais adicionais */}
+            <div className="grid grid-cols-3 gap-3 mb-6">
+              {[
+                { icon: Shield, label: "Segurança" },
+                { icon: Globe, label: "ICP-Brasil" },
+                { icon: Headphones, label: "Suporte 24/7" },
+              ].map((item, i) => (
+                <div
+                  key={i}
+                  className="text-center p-3 bg-bright-snow rounded-xl"
+                >
+                  <item.icon className="w-6 h-6 text-rich-cerulean mx-auto mb-1" />
+                  <p className="text-xs text-gray-500">{item.label}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* Botão CTA */}
+            <button
+              onClick={() => setIsModalOpen(false)}
+              className="w-full py-3 bg-yale-blue text-white font-semibold rounded-full hover:bg-rich-cerulean transition"
+            >
+              Entendi, continuar
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

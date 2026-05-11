@@ -130,7 +130,7 @@ function SobreNos() {
             </div>
             <div className="relative">
               <div className="aspect-square bg-gradient-to-br from-baby-blue-ice to-rich-cerulean rounded-2xl flex items-center justify-center">
-                <Shield className="w-32 h-32 text-white opacity-80" />
+               <img  src="/src/assets/baregeLogo.png" alt="Logo barege tecnologia"  />
               </div>
               <div className="absolute -bottom-4 -right-4 bg-yale-blue text-white rounded-2xl p-6 shadow-xl">
                 <p className="text-3xl font-bold">+5.000</p>
