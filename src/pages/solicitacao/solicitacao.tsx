@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+
 /* eslint-disable no-useless-assignment */
 // src/pages/Solicitacao.tsx
 import { useRef, useState } from "react";
@@ -90,6 +90,7 @@ function Solicitacao() {
   const valoresIniciais = getValoresIniciais(produtoSelecionado);
 
   // ✅ Dados completos do produto vindo do data centralizado
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const produtoCompleto = produtoSelecionado
     ? getProdutoPorId(produtoSelecionado)
     : null;
