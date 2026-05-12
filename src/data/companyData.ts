@@ -1,4 +1,4 @@
-import type { CompanyInfo } from "../models/tipocompany";
+import type { CompanyInfo } from "../models/companyModel";
 
 export const companyInfo: CompanyInfo = {
   name: "Barege Tecnologia",

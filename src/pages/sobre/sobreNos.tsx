@@ -14,7 +14,6 @@ import { companyInfo } from "../../data";
 import DepoimentoCard from "../../components/cards/depoimentosCard";
 import { depoimentosData } from "../../data/depoimentoData";
 
-
 function SobreNos() {
   // Diferenciais
   const diferenciais = [
@@ -66,8 +65,6 @@ function SobreNos() {
     { valor: "98%", label: "Satisfação" },
     { valor: "24/7", label: "Suporte" },
   ];
-
-  
 
   return (
     <div className="bg-bright-snow">
@@ -130,7 +127,10 @@ function SobreNos() {
             </div>
             <div className="relative">
               <div className="aspect-square bg-linear-to-br from-baby-blue-ice to-rich-cerulean rounded-2xl flex items-center justify-center">
-               <img  src="/src/assets/baregeLogo.png" alt="Logo barege tecnologia"  />
+                <img
+                  src="https://i.postimg.cc/MTzjRQky/barege-Logo.png"
+                  alt="Logo barege tecnologia"
+                />
               </div>
               <div className="absolute -bottom-4 -right-4 bg-yale-blue text-white rounded-2xl p-6 shadow-xl">
                 <p className="text-3xl font-bold">+5.000</p>
@@ -194,7 +194,7 @@ function SobreNos() {
         </div>
       </section>
 
-       {/* ===== DEPOIMENTOS ===== */}
+      {/* ===== DEPOIMENTOS ===== */}
       <section className="py-20 bg-bright-snow-2">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">

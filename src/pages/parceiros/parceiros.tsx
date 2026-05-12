@@ -7,7 +7,7 @@ import {
   Shield,
   TrendingUp,
 } from "lucide-react";
-import { companyInfo } from "../../data/companyInfo";
+import { companyInfo } from "../../data/companyData";
 
 function Parceiros() {
   const vantagens = [

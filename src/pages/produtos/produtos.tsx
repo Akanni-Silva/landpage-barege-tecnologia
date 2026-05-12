@@ -1,15 +1,7 @@
 import { useState, useMemo } from "react";
-import { Link } from "react-router-dom";
-import {
-  Search,
-  BadgeCheck,
-  Building,
-  User,
-  X,
-  SlidersHorizontal,
-} from "lucide-react";
+import { Search, Building, User, X, SlidersHorizontal } from "lucide-react";
 import { todosProdutos } from "../../data";
-import { formatPrice } from "../../utils";
+import { ProductCard } from "../../components/cards/productsCards";
 
 // Categorias disponíveis
 const categorias = [
@@ -294,71 +286,7 @@ function Produtos() {
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {produtosFiltrados.map((produto) => (
-              <div
-                key={produto.id}
-                className={`relative bg-white rounded-2xl p-6 shadow-md hover:shadow-xl transition-shadow duration-300 border ${
-                  produto.popular ? "border-rich-cerulean" : "border-gray-100"
-                }`}
-              >
-                {produto.popular && (
-                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-rich-cerulean text-white px-4 py-1 rounded-full text-xs font-semibold">
-                    MAIS VENDIDO
-                  </div>
-                )}
-
-                <div className="text-center mb-4 mt-2">
-                  <div className="flex justify-center mb-2">
-                    {produto.categoria === "Pessoa Física" ? (
-                      <User className="w-10 h-10 text-rich-cerulean" />
-                    ) : (
-                      <Building className="w-10 h-10 text-rich-cerulean" />
-                    )}
-                  </div>
-                  <h3 className="text-xl font-bold text-yale-blue">
-                    {produto.nome}
-                  </h3>
-                  <p className="text-sm text-gray-500">{produto.tipo}</p>
-                  <div className="flex justify-center gap-2 mt-1">
-                    <span className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">
-                      {produto.categoria}
-                    </span>
-                    <span className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">
-                      {produto.duracao}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="text-center mb-4">
-                  <p className="text-sm text-gray-400 line-through">
-                    {formatPrice(produto.precoOriginal)}
-                  </p>
-                  <p className="text-3xl font-bold text-yale-blue">
-                    {formatPrice(produto.precoDesconto)}
-                  </p>
-                  <span className="inline-block bg-green-100 text-green-700 text-xs font-semibold px-2 py-1 rounded-full mt-1">
-                    {produto.desconto}% OFF
-                  </span>
-                  <p className="text-xs text-gray-400 mt-1">
-                    {produto.parcelamento}
-                  </p>
-                </div>
-
-                <ul className="space-y-2 mb-6 text-sm">
-                  {produto.caracteristicas.slice(0, 4).map((feature, index) => (
-                    <li key={index} className="flex items-start gap-2">
-                      <BadgeCheck className="w-4 h-4 text-rich-cerulean mt-0.5 shrink-0" />
-                      <span className="text-gray-600">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                <Link
-                  to={`/solicitacao?produto=${produto.id}`}
-                  className="block w-full py-3 bg-yale-blue text-white font-semibold rounded-full hover:bg-rich-cerulean transition text-center"
-                >
-                  Comprar Agora
-                </Link>
-              </div>
+              <ProductCard key={produto.id} produto={produto} />
             ))}
           </div>
         )}

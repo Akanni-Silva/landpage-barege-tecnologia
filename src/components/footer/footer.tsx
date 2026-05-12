@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Percent } from "lucide-react";
-import { companyInfo } from "../../data/companyInfo";
+import { companyInfo } from "../../data/companyData";
 import baregeLogo from "../../assets/baregeLogo.png";
 
 function Footer() {

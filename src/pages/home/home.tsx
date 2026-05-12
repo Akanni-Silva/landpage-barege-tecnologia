@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
 import {
   BadgeCheck,
   Search,
@@ -16,17 +17,22 @@ import {
   MessageCircle,
   Mail,
   ChevronLeft,
+  Info,
 } from "lucide-react";
-import { companyInfo, produtosDestaque } from "../../data";
-import { formatPrice } from "../../utils";
+import { formatPrice } from "../../utils/formatPrice";
 
 import banner1 from "../../assets/banner-1-hero-barege.png";
 import banner2 from "../../assets/banner-2-produtos-barege.png";
 import banner3 from "../../assets/banner-3-sobre-barege.png";
-import { useEffect, useState } from "react";
+import { companyInfo, produtosDestaque } from "../../data";
+import { ProductModal } from "../../components/modals/productModal";
+import type { DadosModalProduto, Produto } from "../../models/productModel";
+import { getVisualPorTipo } from "../../services/productService";
 
 function Home() {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [dadosModal, setDadosModal] = useState<DadosModalProduto | null>(null);
 
   const banners = [
     { id: 1, image: banner1, alt: "Banner Hero Barege" },
@@ -34,7 +40,6 @@ function Home() {
     { id: 3, image: banner3, alt: "Banner Sobre Barege" },
   ];
 
-  // Autoplay
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % banners.length);
@@ -42,16 +47,25 @@ function Home() {
     return () => clearInterval(timer);
   }, []);
 
-  const goToSlide = (index: number) => {
-    setCurrentSlide(index);
-  };
-
-  const nextSlide = () => {
+  const goToSlide = (index: number) => setCurrentSlide(index);
+  const nextSlide = () =>
     setCurrentSlide((prev) => (prev + 1) % banners.length);
-  };
-
-  const prevSlide = () => {
+  const prevSlide = () =>
     setCurrentSlide((prev) => (prev - 1 + banners.length) % banners.length);
+
+  const handleOpenModal = (produto: Produto) => {
+    const visual = getVisualPorTipo(produto.tipo);
+    if (!visual) return;
+
+    setDadosModal({
+      titulo: `${produto.nome} - ${produto.tipo}`,
+      descricao: `Certificado digital ${produto.nome} no formato ${produto.tipo} com validade de ${produto.duracao}. ${produto.categoria}.`,
+      beneficios: produto.caracteristicas,
+      imagem: visual.imagem,
+      corBorda: visual.corBorda,
+      corSombra: visual.corSombra,
+    });
+    setIsModalOpen(true);
   };
 
   const categorias = [
@@ -68,11 +82,52 @@ function Home() {
     { icon: Heart, nome: "e-Saúde", desc: "Área da saúde" },
   ];
 
+  // ✅ Componente reutilizável: Imagem + Botão de Info (FORA da imagem)
+  const ProdutoImagem = ({ produto }: { produto: Produto }) => {
+    const visual = getVisualPorTipo(produto.tipo);
+    if (!visual) return null;
+
+    return (
+      <div className="flex flex-col items-center mb-3 mt-2">
+        {/* Imagem do produto */}
+        <div
+          className={`
+            w-24 h-24 rounded-full 
+            border-4 ${visual.corBorda} ${visual.corSombra}
+            shadow-lg
+            bg-gradient-to-br from-bright-snow to-white
+            flex items-center justify-center
+            overflow-hidden
+            transition-transform duration-300 hover:scale-110
+          `}
+        >
+          <img
+            src={visual.imagem}
+            alt={`${produto.nome} ${produto.tipo}`}
+            className="w-16 h-16 object-contain"
+          />
+        </div>
+
+        {/* ✅ Botão de info ENTRE a imagem e o nome */}
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            handleOpenModal(produto);
+          }}
+          className="inline-flex items-center gap-1 mt-2 text-xs text-rich-cerulean hover:text-yale-blue transition font-medium"
+        >
+          <Info className="w-3.5 h-3.5" />
+          Saiba mais
+        </button>
+      </div>
+    );
+  };
+
   return (
     <>
-      {/* ===== HERO ===== */}
-      {/* Versão Mobile/Tablet - Gradiente com CTA simples */}
-      <section className="block md:hidden bg-linear-to-br from-yale-blue to-rich-cerulean py-20">
+      {/* ===== HERO MOBILE/TABLET ===== */}
+      <section className="block md:hidden bg-gradient-to-br from-yale-blue to-rich-cerulean py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-3xl sm:text-4xl font-extrabold text-white mb-6">
             Certificado Digital
@@ -97,16 +152,13 @@ function Home() {
         </div>
       </section>
 
-      {/* Versão Desktop - Carrossel de banners */}
-      <section className="hidden md:block relative h-[600px] overflow-hidden">
-        {/* Slides */}
+      {/* ===== HERO DESKTOP - CARROSSEL ===== */}
+      <section className="hidden md:block relative h-[500px] overflow-hidden">
         <div className="absolute inset-0">
           {banners.map((banner, index) => (
             <div
               key={banner.id}
-              className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-                index === currentSlide ? "opacity-100" : "opacity-0"
-              }`}
+              className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${index === currentSlide ? "opacity-100" : "opacity-0"}`}
             >
               <img
                 src={banner.image}
@@ -116,11 +168,7 @@ function Home() {
             </div>
           ))}
         </div>
-
-        {/* Overlay sutil para as setas ficarem visíveis */}
         <div className="absolute inset-0 bg-black/10" />
-
-        {/* Setas de navegação */}
         <button
           onClick={prevSlide}
           className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-white/20 hover:bg-white/40 text-white rounded-full p-3 transition backdrop-blur-sm"
@@ -135,34 +183,27 @@ function Home() {
         >
           <ChevronRight className="w-5 h-5" />
         </button>
-
-        {/* Dots */}
         <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex gap-3">
           {banners.map((_, index) => (
             <button
               key={index}
               onClick={() => goToSlide(index)}
-              className={`h-2.5 rounded-full transition-all duration-300 ${
-                index === currentSlide
-                  ? "bg-white w-10"
-                  : "bg-white/50 w-2.5 hover:bg-white/70"
-              }`}
+              className={`h-2.5 rounded-full transition-all duration-300 ${index === currentSlide ? "bg-white w-10" : "bg-white/50 w-2.5 hover:bg-white/70"}`}
               aria-label={`Ir para slide ${index + 1}`}
             />
           ))}
         </div>
       </section>
 
-      {/* ===== BARRA DE CTAs (apenas no desktop) ===== */}
-      <section className="hidden md:block bg-linear-to-r from-yale-blue to-rich-cerulean py-6">
+      {/* ===== BARRA DE CTAs (DESKTOP) ===== */}
+      <section className="hidden md:block bg-gradient-to-r from-yale-blue to-rich-cerulean py-6">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
               to="/solicitacao"
               className="w-full sm:w-auto px-8 py-3 bg-white text-yale-blue font-semibold rounded-full hover:bg-bright-snow transition shadow-lg text-center flex items-center justify-center gap-2"
             >
-              Solicitar Certificado
-              <ChevronRight className="w-4 h-4" />
+              Solicitar Certificado <ChevronRight className="w-4 h-4" />
             </Link>
             <Link
               to="/produtos"
@@ -197,7 +238,8 @@ function Home() {
                 <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-rich-cerulean text-white px-4 py-1 rounded-full text-xs font-semibold">
                   MAIS VENDIDO
                 </div>
-                <div className="text-center mb-4 mt-2">
+                <ProdutoImagem produto={produto} />
+                <div className="text-center">
                   <h3 className="text-xl font-bold text-yale-blue">
                     {produto.nome}
                   </h3>
@@ -206,7 +248,7 @@ function Home() {
                     {produto.duracao}
                   </p>
                 </div>
-                <div className="text-center mb-4">
+                <div className="text-center mt-4">
                   <p className="text-sm text-gray-400 line-through">
                     {formatPrice(produto.precoOriginal)}
                   </p>
@@ -220,7 +262,7 @@ function Home() {
                     {produto.parcelamento}
                   </p>
                 </div>
-                <ul className="space-y-2 mb-6 text-sm">
+                <ul className="space-y-2 my-6 text-sm">
                   {produto.caracteristicas.map((feature, index) => (
                     <li key={index} className="flex items-start gap-2">
                       <BadgeCheck className="w-4 h-4 text-rich-cerulean mt-0.5 shrink-0" />
@@ -228,7 +270,6 @@ function Home() {
                     </li>
                   ))}
                 </ul>
-                {/* ✅ Link usa o ID real do produto dos dados */}
                 <Link
                   to={`/solicitacao?produto=${produto.id}`}
                   className="block w-full py-3 bg-yale-blue text-white font-semibold rounded-full hover:bg-rich-cerulean transition text-center"
@@ -244,7 +285,8 @@ function Home() {
                 key={produto.id}
                 className="relative bg-bright-snow rounded-2xl p-6 shadow-md hover:shadow-xl transition-shadow duration-300 border border-gray-100"
               >
-                <div className="text-center mb-4 mt-2">
+                <ProdutoImagem produto={produto} />
+                <div className="text-center">
                   <h3 className="text-xl font-bold text-yale-blue">
                     {produto.nome}
                   </h3>
@@ -253,7 +295,7 @@ function Home() {
                     {produto.duracao}
                   </p>
                 </div>
-                <div className="text-center mb-4">
+                <div className="text-center mt-4">
                   <p className="text-sm text-gray-400 line-through">
                     {formatPrice(produto.precoOriginal)}
                   </p>
@@ -267,7 +309,7 @@ function Home() {
                     {produto.parcelamento}
                   </p>
                 </div>
-                <ul className="space-y-2 mb-6 text-sm">
+                <ul className="space-y-2 my-6 text-sm">
                   {produto.caracteristicas.map((feature, index) => (
                     <li key={index} className="flex items-start gap-2">
                       <BadgeCheck className="w-4 h-4 text-rich-cerulean mt-0.5 shrink-0" />
@@ -275,7 +317,6 @@ function Home() {
                     </li>
                   ))}
                 </ul>
-                {/* ✅ Link usa o ID real do produto dos dados */}
                 <Link
                   to={`/solicitacao?produto=${produto.id}`}
                   className="block w-full py-3 bg-yale-blue text-white font-semibold rounded-full hover:bg-rich-cerulean transition text-center"
@@ -285,9 +326,8 @@ function Home() {
               </div>
             ))}
 
-            {/* CARD 3 */}
-
-            <div className="bg-linear-to-br from-yale-blue to-rich-cerulean rounded-2xl p-6 shadow-md hover:shadow-xl transition-shadow duration-300 border border-rich-cerulean text-white">
+            {/* Card 3: Escolha seu Certificado */}
+            <div className="bg-gradient-to-br from-yale-blue to-rich-cerulean rounded-2xl p-6 shadow-md hover:shadow-xl transition-shadow duration-300 border border-rich-cerulean text-white">
               <div className="text-center mb-6">
                 <Search className="w-10 h-10 text-baby-blue-ice mx-auto mb-3" />
                 <h3 className="text-xl font-bold mb-2">
@@ -297,14 +337,11 @@ function Home() {
                   Clique no tipo desejado e solicite agora mesmo
                 </p>
               </div>
-
               <div className="space-y-2 mb-4">
                 {categorias.slice(0, 2).map((cat, i) => (
                   <Link
                     key={i}
-                    to={`/solicitacao?categoria=${cat.nome
-                      .toLowerCase()
-                      .replace(/\s/g, "-")}`}
+                    to={`/solicitacao?categoria=${cat.nome.toLowerCase().replace(/\s/g, "-")}`}
                     className="flex items-center justify-between p-2 rounded-lg hover:bg-white/10 transition"
                   >
                     <div className="flex items-center gap-2">
@@ -318,9 +355,7 @@ function Home() {
                 {categorias.slice(2).map((cat, i) => (
                   <Link
                     key={i}
-                    to={`/solicitacao?categoria=${cat.nome
-                      .toLowerCase()
-                      .replace(/\s/g, "-")}`}
+                    to={`/solicitacao?categoria=${cat.nome.toLowerCase().replace(/\s/g, "-")}`}
                     className="flex items-center justify-between p-2 rounded-lg hover:bg-white/10 transition"
                   >
                     <div className="flex items-center gap-2">
@@ -331,7 +366,6 @@ function Home() {
                   </Link>
                 ))}
               </div>
-
               <Link
                 to="/solicitacao"
                 className="block w-full py-3 bg-white text-yale-blue font-semibold rounded-full hover:bg-bright-snow transition text-center text-sm"
@@ -362,13 +396,12 @@ function Home() {
             to="/como-funciona"
             className="text-rich-cerulean hover:text-yale-blue font-semibold inline-flex items-center gap-1"
           >
-            Saiba como funciona
-            <ChevronRight className="w-4 h-4" />
+            Saiba como funciona <ChevronRight className="w-4 h-4" />
           </Link>
         </div>
       </section>
 
-      {/* COMO CHEGAR */}
+      {/* ===== LOCALIZAÇÃO ===== */}
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
@@ -379,9 +412,7 @@ function Home() {
               Venha nos visitar ou faça sua emissão por videoconferência
             </p>
           </div>
-
           <div className="grid lg:grid-cols-3 gap-8">
-            {/* Cards de informação */}
             <div className="space-y-6">
               <div className="bg-bright-snow rounded-2xl p-6 border border-gray-100 shadow-md">
                 <h3 className="text-lg font-bold text-yale-blue mb-4 flex items-center gap-2">
@@ -400,7 +431,6 @@ function Home() {
                   Como chegar
                 </a>
               </div>
-
               <div className="bg-bright-snow rounded-2xl p-6 border border-gray-100 shadow-md">
                 <h3 className="text-lg font-bold text-yale-blue mb-4 flex items-center gap-2">
                   <Clock className="w-5 h-5 text-rich-cerulean" />
@@ -417,7 +447,6 @@ function Home() {
                   </li>
                 </ul>
               </div>
-
               <div className="bg-bright-snow rounded-2xl p-6 border border-gray-100 shadow-md">
                 <h3 className="text-lg font-bold text-yale-blue mb-4 flex items-center gap-2">
                   <Phone className="w-5 h-5 text-rich-cerulean" />
@@ -443,10 +472,8 @@ function Home() {
                 </div>
               </div>
             </div>
-
-            {/* Mapa */}
             <div className="lg:col-span-2">
-              <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden h-full min-h-100">
+              <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden h-full min-h-[400px]">
                 <iframe
                   src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3658.122857672406!2d-46.79169468440715!3d-23.52858468470034!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ceff095c5e5b8d%3A0x9e4e4e4e4e4e4e4e!2sAv.%20dos%20Autonomistas%2C%202561%20-%20Vila%20Osasco%2C%20Osasco%20-%20SP!5e0!3m2!1spt-BR!2sbr!4v1625000000000!5m2!1spt-BR!2sbr"
                   width="100%"
@@ -463,6 +490,13 @@ function Home() {
           </div>
         </div>
       </section>
+
+      {/* Modal */}
+      <ProductModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        midiaVisual={dadosModal}
+      />
     </>
   );
 }
