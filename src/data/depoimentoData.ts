@@ -1,4 +1,5 @@
-import type { Depoimento } from "../models";
+import type { Depoimento } from "../models/depoimentoModel";
+
 
 export const depoimentosData: Depoimento[] = [
   {

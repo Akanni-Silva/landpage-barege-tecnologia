@@ -1,6 +1,5 @@
 import { Award, User } from "lucide-react";
-import type { Depoimento } from "../../models";
-
+import type { Depoimento } from "../../models/depoimentoModel";
 
 interface DepoimentoCardProps {
   depoimento: Depoimento;
