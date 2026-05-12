@@ -1,4 +1,3 @@
-
 /* eslint-disable no-useless-assignment */
 // src/pages/Solicitacao.tsx
 import { useRef, useState } from "react";
@@ -26,11 +25,7 @@ import {
 } from "lucide-react";
 import { formatPrice, validarDocumento, validarTelefone } from "../../utils";
 import { ProductModal } from "../../components/modals/productModal";
-import {
-  getMidiaPorId,
-  getProdutoPorId,
-  getVisualPorTipo,
-} from "../../services/productService";
+import { getMidiaPorId, getVisualPorTipo } from "../../services/productService";
 import type { FormErrors } from "../../models/ErrosModel";
 import {
   midiasCertificado,
@@ -88,12 +83,6 @@ function Solicitacao() {
   const [searchParams] = useSearchParams();
   const produtoSelecionado = searchParams.get("produto") || "";
   const valoresIniciais = getValoresIniciais(produtoSelecionado);
-
-  // ✅ Dados completos do produto vindo do data centralizado
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const produtoCompleto = produtoSelecionado
-    ? getProdutoPorId(produtoSelecionado)
-    : null;
 
   // ============================================================
   // ESTADOS DO FORMULÁRIO
