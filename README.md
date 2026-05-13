@@ -1,176 +1,240 @@
-# Barege Tecnologia - Landing Page
+# Barege Tecnologia - Site Institucional
 
-Landing page institucional da Barege Tecnologia para captação de solicitações de certificado digital. O projeto apresenta os certificados A1 e A3, oferece chamadas diretas para WhatsApp, possui formulário de contato integrado ao EmailJS e uma seção voltada para parceria com contadores.
+Este projeto é um site institucional completo para a Barege Tecnologia. Apesar do nome original `landpage-barege`, a aplicação evoluiu para um site com múltiplas páginas, navegação interna e conteúdo completo sobre produtos, serviços e contato.
 
-## Tecnologias
+---
+
+## 1. Visão geral
+
+Esta aplicação React + TypeScript é um site corporativo destinado a promover os serviços de certificação digital da Barege Tecnologia. O projeto inclui:
+
+- Página inicial responsiva com carrossel de banners e CTA claros
+- Seção de produtos / serviços de certificação digital
+- Fluxo de solicitação de certificado com cálculo de preço
+- Formulário avançado com validações para CPF/CNPJ e WhatsApp
+- Envio de solicitações por EmailJS
+- Abertura automática do WhatsApp para contato imediato
+- Seção de contato, parceiros, política de privacidade e termos de uso
+
+---
+
+## 2. Tecnologias utilizadas
 
 - React 19
-- TypeScript
+- TypeScript 6
 - Vite
 - Tailwind CSS 4
-- EmailJS
+- React Router DOM
+- EmailJS Browser
 - Lucide React
+- Phosphor Icons React
+- ESLint
 
-## Funcionalidades
+---
 
-- Página inicial responsiva para divulgação de certificados digitais.
-- CTA para atendimento via WhatsApp.
-- Comparativo entre certificado A1 e A3.
-- Formulário de solicitação com envio por EmailJS.
-- Feedback visual de envio, carregamento e erro.
-- Seção de parceria para contadores.
-- Dados de contato centralizados em um único arquivo.
+## 3. Funcionalidades principais
 
-## Pré-requisitos
+- Navegação por rotas internas com `react-router-dom`
+- Banner em carrossel com navegação automática e manual
+- Seleção de tipos de certificado, mídia e validade
+- Cálculo dinâmico de preço com desconto e adicionais
+- Formulário em etapas com validações de campos
+- Envio de pedido por EmailJS e redirecionamento para WhatsApp
+- Seções de contato e informações da empresa com link direto para WhatsApp
+- Layout responsivo para desktop, tablet e mobile
 
-Antes de começar, tenha instalado:
+---
 
-- Node.js
+## 4. Estrutura principal do projeto
+
+```text
+src/
+  App.tsx
+  main.tsx
+  index.css
+  components/
+    navbar/navbar.tsx
+    footer/footer.tsx
+    modals/productModal.tsx
+    cards/
+      depoimentosCard.tsx
+      productsCards.tsx
+  data/
+    companyData.ts
+    productsData.ts
+    depoimentoData.ts
+    index.ts
+  models/
+    companyModel.ts
+    depoimentoModel.ts
+    productModel.ts
+    ErrosModel.ts
+  pages/
+    home/home.tsx
+    produtos/produtos.tsx
+    solicitacao/solicitacao.tsx
+    contato/contato.tsx
+    comoFunciona/comoFunciona.tsx
+    parceiros/parceiros.tsx
+    sobre/sobreNos.tsx
+    politicaPriv/politicaPrivacidade.tsx
+    termosUso/termosUso.tsx
+  services/
+    productService.ts
+  utils/
+    formatPrice.ts
+    validators.ts
+    index.ts
+```
+
+---
+
+## 5. Rotas disponíveis
+
+- `/` - Página inicial
+- `/produtos` - Lista de produtos e certificados
+- `/solicitacao` - Formulário de solicitação de certificado
+- `/como-funciona` - Funcionamento do serviço
+- `/contato` - Informações de contato e localização
+- `/parceiros` - Seção dedicada a parcerias
+- `/sobre-nos` - Sobre a empresa
+- `/politica-privacidade` - Política de privacidade
+- `/termos-uso` - Termos de uso
+
+---
+
+## 6. Instalação
+
+### Requisitos
+
+- Node.js (recomendado 18+)
 - npm
 
-## Instalação
-
-Clone o repositório e instale as dependências:
+### Passos
 
 ```bash
+git clone <URL_DO_REPOSITÓRIO>
+cd landpage-barege-tecnologia
 npm install
 ```
 
-## Como executar
+---
 
-Inicie o servidor de desenvolvimento:
-
-```bash
-npm run dev
-```
-
-Depois, acesse a URL exibida no terminal, normalmente:
-
-```text
-http://localhost:5173
-```
-
-## Scripts disponíveis
+## 7. Execução em ambiente de desenvolvimento
 
 ```bash
 npm run dev
 ```
 
-Executa o projeto em modo de desenvolvimento com hot reload.
+Em seguida, abra no navegador o endereço exibido pelo Vite, geralmente `http://localhost:5173`.
+
+---
+
+## 8. Build de produção
 
 ```bash
 npm run build
 ```
 
-Gera a versão de produção em `dist/`, executando antes a checagem do TypeScript.
+O output final é emitido em `dist/`.
+
+### Pre visualizar a build
 
 ```bash
 npm run preview
 ```
 
-Executa uma prévia local da versão gerada para produção.
+---
+
+## 9. Lint e qualidade de código
 
 ```bash
 npm run lint
 ```
 
-Executa o ESLint no projeto.
+Este comando executa o ESLint em todo o projeto.
 
-## Estrutura do projeto
+---
 
-```text
-src/
-  components/
-    footer/
-      footer.tsx
-    navbar/
-      navbar.tsx
-  data/
-    companyInfo.ts
-  pages/
-    homepage/
-      homepage.tsx
-  App.tsx
-  main.tsx
-  index.css
-public/
-  favicon.svg
-  icons.svg
-```
+## 10. Configuração de dados da empresa
 
-## Personalização dos dados da empresa
+Os dados de contato e links principais estão centralizados em:
 
-As principais informações de contato ficam em:
+- `src/data/companyData.ts`
 
-```text
-src/data/companyInfo.ts
-```
+Neste arquivo você pode alterar:
 
-Nesse arquivo é possível alterar:
+- `name`
+- `address`
+- `email`
+- `instagram`
+- `whatsappNumber`
+- `whatsappLink`
 
-- Nome da empresa
-- Endereço
-- E-mail
-- Instagram
-- Número do WhatsApp
-- Link de atendimento pelo WhatsApp
+---
 
-## Configuração do formulário
+## 11. Configuração do formulário de solicitação
 
-O formulário de solicitação usa o EmailJS por meio da função `sendForm`, configurada em:
+O formulário principal de solicitação está em:
 
-```text
-src/pages/homepage/homepage.tsx
-```
+- `src/pages/solicitacao/solicitacao.tsx`
 
-Para usar outra conta ou template do EmailJS, altere os valores:
+Ele utiliza:
 
-- Service ID
-- Template ID
-- Public Key
+- Validação customizada para CPF/CNPJ
+- Validação de telefone
+- Cálculo de preço com base em tipo de certificado, mídia e validade
+- Envio para EmailJS via `sendForm`
 
-Os campos enviados atualmente pelo formulário são:
+### Serviço EmailJS configurado
 
-- Nome completo
-- WhatsApp
-- CPF ou CNPJ
-- Tipo de certificado
-- Data de envio
+Os valores atuais estão definidos diretamente no código em `solicitacao.tsx`:
 
-## Estilos
+- Service ID: `service_owuos8i`
+- Template ID: `template_omknf2m`
+- Public Key: `_FstKZ8T_TaD7uNMf`
 
-O projeto usa Tailwind CSS 4. As cores principais da identidade visual estão definidas em:
+> Recomenda-se mover essas chaves para variáveis de ambiente em produção.
 
-```text
-src/index.css
-```
+---
 
-Cores configuradas:
+## 12. Personalização de produtos e catálogos
 
-- `baby-blue-ice`
-- `rich-cerulean`
-- `yale-blue`
-- `bright-snow`
-- `bright-snow-2`
+Os dados de produtos e certificados estão em:
 
-## Build para produção
+- `src/data/productsData.ts`
 
-Para gerar os arquivos finais:
+O serviço de suporte a visualização e seleção está em:
 
-```bash
-npm run build
-```
+- `src/services/productService.ts`
 
-O resultado será criado na pasta:
+Use esses arquivos para ajustar nomes, preços, descrições e ícones dos certificados.
 
-```text
-dist/
-```
+---
 
-## Contato
+## 13. Estilização
 
-Barege Tecnologia  
-E-mail: baregetecnologia@gmail.com  
-WhatsApp: (11) 9 9860-6204  
-Instagram: @baregetecnologia  
-Endereço: Av. dos Autonomistas, 2561 - Osasco
+A estilização é feita em Tailwind CSS e o arquivo principal de estilo global é:
+
+- `src/index.css`
+
+As classes personalizadas e o tema de cores são usados em todo o app para manter a identidade visual.
+
+---
+
+## 14. Observações importantes
+
+- O projeto é configurado como `private: true` em `package.json`, portanto não está planejado para publicação como pacote npm.
+- A arquitetura é orientada a componentes, com foco em reutilização e manutenção.
+- As principais interações do usuário são via WhatsApp e formulário de solicitação.
+
+---
+
+## 15. Contato do projeto
+
+Barege Tecnologia
+
+- E-mail: `baregetecnologia@gmail.com`
+- WhatsApp: `https://wa.me/5511998606204`
+- Instagram: `https://instagram.com/baregetecnologia`
+- Endereço: Av. dos Autonomistas, 2561 - Osasco, SP
