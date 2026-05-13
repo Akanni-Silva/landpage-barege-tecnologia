@@ -35,7 +35,7 @@ import {
 import type { DadosModalProduto } from "../../models/productModel";
 
 // ============================================================
-// MAPEAMENTO DE ÍCONES (apenas referência de componentes)
+// MAPEAMENTO DE ÍCONES
 // ============================================================
 const iconeMap: Record<string, React.ComponentType<{ className?: string }>> = {
   User,
@@ -76,6 +76,33 @@ const getValoresIniciais = (produtoSelecionado: string | null) => {
   return { tipo, midia, validade };
 };
 
+// ============================================================
+// VALIDAÇÃO DE TIPO DE DOCUMENTO VS TIPO DE CERTIFICADO
+// ============================================================
+const validarTipoDocumento = (
+  tipoCertificado: string,
+  documento: string,
+): boolean => {
+  const numeros = documento.replace(/[^\d]/g, "");
+
+  if (tipoCertificado === "ecpf") {
+    return numeros.length === 11;
+  } else if (tipoCertificado === "ecnpj") {
+    return numeros.length === 14;
+  }
+
+  return true;
+};
+
+const getMensagemErroTipo = (tipoCertificado: string): string => {
+  if (tipoCertificado === "ecpf") {
+    return "Para e-CPF é necessário informar um CPF (11 dígitos)";
+  } else if (tipoCertificado === "ecnpj") {
+    return "Para e-CNPJ é necessário informar um CNPJ (14 dígitos)";
+  }
+  return "Documento inválido";
+};
+
 function Solicitacao() {
   // ============================================================
   // URL PARAMS & DADOS INICIAIS
@@ -107,7 +134,7 @@ function Solicitacao() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // ============================================================
-  // DADOS DERIVADOS (do data centralizado)
+  // DADOS DERIVADOS
   // ============================================================
   const midia = getMidiaPorId(midiaEscolhida);
   const midiaVisual = midia ? getVisualPorTipo(midia.infoTitulo) : null;
@@ -116,7 +143,7 @@ function Solicitacao() {
   const validade = validadesCertificado.find((v) => v.id === validadeEscolhida);
 
   // ============================================================
-  // DADOS PARA O MODAL (vêm do produto completo + mídia)
+  // DADOS PARA O MODAL
   // ============================================================
   const dadosModal: DadosModalProduto | null = (() => {
     if (!midia || !midiaVisual) return null;
@@ -168,26 +195,70 @@ function Solicitacao() {
     const formData = new FormData(form.current);
     const nome = formData.get("nome")?.toString().trim() || "";
     const email = formData.get("email")?.toString().trim() || "";
-    const telefone = formData.get("telefone")?.toString().trim() || "";
+    const whatsapp = formData.get("whatsapp")?.toString().trim() || "";
     const documento = formData.get("documento")?.toString().trim() || "";
 
+    // ============================================================
+    // VALIDAÇÃO
+    // ============================================================
     const newErrors: FormErrors = {};
 
-    if (nome.length < 3)
+    // Nome
+    if (nome.length < 3) {
       newErrors.nome = "Nome deve ter pelo menos 3 caracteres";
-    if (!email || !email.includes("@")) newErrors.email = "E-mail inválido";
-    if (!telefone) newErrors.telefone = "Telefone é obrigatório";
-    else if (!validarTelefone(telefone))
-      newErrors.telefone = "Telefone inválido";
-    if (!documento) newErrors.documento = "CPF ou CNPJ é obrigatório";
-    else if (!validarDocumento(documento))
-      newErrors.documento = "Documento inválido";
+    }
+
+    // E-mail
+    if (!email || !email.includes("@")) {
+      newErrors.email = "E-mail inválido";
+    }
+
+    // WhatsApp
+    if (!whatsapp) {
+      newErrors.whatsapp = "WhatsApp é obrigatório";
+    } else if (!validarTelefone(whatsapp)) {
+      newErrors.whatsapp = "WhatsApp inválido. Use (11) 99999-9999";
+    }
+
+    // Documento
+    if (!documento) {
+      newErrors.documento = "CPF ou CNPJ é obrigatório";
+    } else if (!validarDocumento(documento)) {
+      newErrors.documento = "CPF ou CNPJ inválido";
+    } else if (!validarTipoDocumento(tipoEscolhido, documento)) {
+      newErrors.documento = getMensagemErroTipo(tipoEscolhido);
+    }
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
 
+    // ============================================================
+    // PREPARAR CAMPOS HIDDEN
+    // ============================================================
+    const oldTipo = form.current.querySelector(
+      'input[name="tipo-certificado"]',
+    );
+    const oldData = form.current.querySelector('input[name="data_envio"]');
+    if (oldTipo) oldTipo.remove();
+    if (oldData) oldData.remove();
+
+    const inputTipo = document.createElement("input");
+    inputTipo.type = "hidden";
+    inputTipo.name = "tipo-certificado";
+    inputTipo.value = `${tipo?.nome || ""} - ${midia?.nome || ""} - ${validade?.nome || ""} - Total: ${formatPrice(precoFinal)}`;
+    form.current.appendChild(inputTipo);
+
+    const inputData = document.createElement("input");
+    inputData.type = "hidden";
+    inputData.name = "data_envio";
+    inputData.value = new Date().toLocaleDateString("pt-BR");
+    form.current.appendChild(inputData);
+
+    // ============================================================
+    // ENVIO
+    // ============================================================
     setErrors({});
     setIsSubmitting(true);
 
@@ -326,7 +397,7 @@ function Solicitacao() {
                   </div>
                   <div className="space-y-3">
                     {midiasCertificado.map((m) => {
-                      const visual = getVisualPorTipo(m.infoTitulo); // ✅ Do data centralizado
+                      const visual = getVisualPorTipo(m.infoTitulo);
                       return (
                         <button
                           key={m.id}
@@ -450,24 +521,13 @@ function Solicitacao() {
                       </p>
                     </div>
                   </div>
-
                   <form
                     ref={form}
                     onSubmit={handleSubmit}
                     className="space-y-5"
                     noValidate
                   >
-                    <input
-                      type="hidden"
-                      name="pedido"
-                      value={`${tipo?.nome} | ${midia?.nome} | ${validade?.nome} | ${formatPrice(precoFinal)}`}
-                    />
-                    <input
-                      type="hidden"
-                      name="data_envio"
-                      value={new Date().toLocaleDateString("pt-BR")}
-                    />
-
+                    {/* Nome */}
                     <div>
                       <label className="block text-sm font-semibold text-yale-blue mb-1">
                         Nome Completo <span className="text-red-500">*</span>
@@ -489,7 +549,9 @@ function Solicitacao() {
                       )}
                     </div>
 
+                    {/* ✅ E-mail e WhatsApp lado a lado */}
                     <div className="grid sm:grid-cols-2 gap-4">
+                      {/* E-mail */}
                       <div>
                         <label className="block text-sm font-semibold text-yale-blue mb-1">
                           E-mail <span className="text-red-500">*</span>
@@ -510,36 +572,50 @@ function Solicitacao() {
                           </p>
                         )}
                       </div>
+
+                      {/* WhatsApp */}
                       <div>
                         <label className="block text-sm font-semibold text-yale-blue mb-1">
-                          Telefone <span className="text-red-500">*</span>
+                          WhatsApp <span className="text-red-500">*</span>
                         </label>
                         <input
                           type="tel"
-                          name="telefone"
+                          name="whatsapp"
                           placeholder="(11) 99999-9999"
-                          className={`w-full px-4 py-3 rounded-lg border ${errors.telefone ? "border-red-400" : "border-gray-300"} focus:ring-2 focus:ring-rich-cerulean transition bg-white`}
+                          className={`w-full px-4 py-3 rounded-lg border ${errors.whatsapp ? "border-red-400" : "border-gray-300"} focus:ring-2 focus:ring-rich-cerulean transition bg-white`}
                           onChange={() =>
-                            setErrors((prev) => ({ ...prev, telefone: "" }))
+                            setErrors((prev) => ({ ...prev, whatsapp: "" }))
                           }
                         />
-                        {errors.telefone && (
+                        {errors.whatsapp && (
                           <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
                             <AlertCircle className="w-4 h-4" />
-                            {errors.telefone}
+                            {errors.whatsapp}
                           </p>
                         )}
                       </div>
                     </div>
 
+                    {/* Documento */}
                     <div>
                       <label className="block text-sm font-semibold text-yale-blue mb-1">
-                        CPF ou CNPJ <span className="text-red-500">*</span>
+                        {tipoEscolhido === "ecpf"
+                          ? "CPF"
+                          : tipoEscolhido === "ecnpj"
+                            ? "CNPJ"
+                            : "CPF ou CNPJ"}{" "}
+                        <span className="text-red-500">*</span>
                       </label>
                       <input
                         type="text"
                         name="documento"
-                        placeholder="000.000.000-00 ou 00.000.000/0000-00"
+                        placeholder={
+                          tipoEscolhido === "ecpf"
+                            ? "000.000.000-00"
+                            : tipoEscolhido === "ecnpj"
+                              ? "00.000.000/0000-00"
+                              : "000.000.000-00 ou 00.000.000/0000-00"
+                        }
                         className={`w-full px-4 py-3 rounded-lg border ${errors.documento ? "border-red-400" : "border-gray-300"} focus:ring-2 focus:ring-rich-cerulean transition bg-white`}
                         onChange={() =>
                           setErrors((prev) => ({ ...prev, documento: "" }))
@@ -551,8 +627,16 @@ function Solicitacao() {
                           {errors.documento}
                         </p>
                       )}
+                      <p className="mt-1 text-xs text-gray-400">
+                        {tipoEscolhido === "ecpf"
+                          ? "Informe apenas CPF (11 dígitos)"
+                          : tipoEscolhido === "ecnpj"
+                            ? "Informe apenas CNPJ (14 dígitos)"
+                            : "Selecione o tipo de certificado primeiro"}
+                      </p>
                     </div>
 
+                    {/* Botão de envio */}
                     <button
                       type="submit"
                       disabled={isSubmitting}
@@ -576,8 +660,11 @@ function Solicitacao() {
             </div>
           </div>
 
-          {/* Coluna lateral */}
+          {/* ============================================================ */}
+          {/* COLUNA LATERAL                                                   */}
+          {/* ============================================================ */}
           <div className="space-y-6">
+            {/* Resumo do Pedido */}
             <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
               <h3 className="text-lg font-bold text-yale-blue mb-4">
                 <Wallet className="w-5 h-5 inline mr-2" />
@@ -665,7 +752,7 @@ function Solicitacao() {
               )}
             </div>
 
-            {/* Como Funciona - NÃO fixo (desce com scroll) */}
+            {/* Como Funciona */}
             <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
               <h3 className="text-lg font-bold text-yale-blue mb-4">
                 Como Funciona
@@ -688,6 +775,7 @@ function Solicitacao() {
         </div>
       </div>
 
+      {/* Modal */}
       <ProductModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
