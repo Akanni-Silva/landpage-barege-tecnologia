@@ -35,6 +35,11 @@ import {
 import type { DadosModalProduto } from "../../models/productModel";
 
 // ============================================================
+// CONFIGURAÇÃO
+// ============================================================
+const WHATSAPP_NUMERO = "5511998606204"; // Número da Barege (DDI+DDD+Número)
+
+// ============================================================
 // MAPEAMENTO DE ÍCONES
 // ============================================================
 const iconeMap: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -186,9 +191,33 @@ function Solicitacao() {
   const precoFinal = calcularPreco();
 
   // ============================================================
-  // SUBMISSÃO DO FORMULÁRIO
+  // MONTAR MENSAGEM PARA WHATSAPP (enviada pelo próprio cliente)
   // ============================================================
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const montarMensagemWhatsApp = (
+    nome: string,
+    email: string,
+    whatsapp: string,
+    documento: string,
+  ): string => {
+    return (
+      `Olá! Gostaria de solicitar meu Certificado Digital.%0A%0A` +
+      `*Meus dados:*%0A` +
+      `👤 Nome: ${nome}%0A` +
+      `📧 E-mail: ${email}%0A` +
+      `📱 WhatsApp: ${whatsapp}%0A` +
+      `📄 Documento: ${documento}%0A%0A` +
+      `*Produto escolhido:*%0A` +
+      `🔒 Tipo: ${tipo?.nome || "—"}%0A` +
+      `💾 Mídia: ${midia?.nome || "—"}%0A` +
+      `📅 Validade: ${validade?.nome || "—"}%0A` +
+      `💰 Total: ${formatPrice(precoFinal)}%0A%0A` +
+      `Aguardo contato para prosseguir com a emissão. Obrigado! 🙏`
+    );
+  };
+  // ============================================================
+  // SUBMISSÃO DO FORMULÁRIO (EMAIL + WHATSAPP)
+  // ============================================================
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!form.current) return;
 
@@ -203,24 +232,20 @@ function Solicitacao() {
     // ============================================================
     const newErrors: FormErrors = {};
 
-    // Nome
     if (nome.length < 3) {
       newErrors.nome = "Nome deve ter pelo menos 3 caracteres";
     }
 
-    // E-mail
     if (!email || !email.includes("@")) {
       newErrors.email = "E-mail inválido";
     }
 
-    // WhatsApp
     if (!whatsapp) {
       newErrors.whatsapp = "WhatsApp é obrigatório";
     } else if (!validarTelefone(whatsapp)) {
       newErrors.whatsapp = "WhatsApp inválido. Use (11) 99999-9999";
     }
 
-    // Documento
     if (!documento) {
       newErrors.documento = "CPF ou CNPJ é obrigatório";
     } else if (!validarDocumento(documento)) {
@@ -235,7 +260,7 @@ function Solicitacao() {
     }
 
     // ============================================================
-    // PREPARAR CAMPOS HIDDEN
+    // PREPARAR CAMPOS HIDDEN (PARA EMAIL)
     // ============================================================
     const oldTipo = form.current.querySelector(
       'input[name="tipo-certificado"]',
@@ -262,30 +287,44 @@ function Solicitacao() {
     setErrors({});
     setIsSubmitting(true);
 
-    sendForm(
-      "service_owuos8i",
-      "template_omknf2m",
-      form.current,
-      "_FstKZ8T_TaD7uNMf",
-    )
-      .then(() => {
-        setSubmitMessage(
-          "✅ Solicitação enviada com sucesso! Entraremos em contato em breve.",
-        );
-        setMessageType("success");
-        form.current?.reset();
-        setStep(1);
-        setTipoEscolhido("");
-        setMidiaEscolhida("");
-        setValidadeEscolhida("");
-        setErrors({});
-      })
-      .catch((error) => {
-        setSubmitMessage("❌ Erro ao enviar. Tente novamente.");
-        setMessageType("error");
-        console.error("Erro:", error);
-      })
-      .finally(() => setIsSubmitting(false));
+    try {
+      // ✅ 1. Enviar por EmailJS
+      await sendForm(
+        "service_owuos8i",
+        "template_omknf2m",
+        form.current,
+        "_FstKZ8T_TaD7uNMf",
+      );
+
+      // ✅ 2. Abrir WhatsApp em segunda aba
+      const mensagemWpp = montarMensagemWhatsApp(
+        nome,
+        email,
+        whatsapp,
+        documento,
+      );
+      window.open(
+        `https://wa.me/${WHATSAPP_NUMERO}?text=${mensagemWpp}`,
+        "_blank",
+      );
+
+      setSubmitMessage(
+        "✅ Solicitação enviada com sucesso! Entraremos em contato em breve.",
+      );
+      setMessageType("success");
+      form.current?.reset();
+      setStep(1);
+      setTipoEscolhido("");
+      setMidiaEscolhida("");
+      setValidadeEscolhida("");
+      setErrors({});
+    } catch (error) {
+      setSubmitMessage("❌ Erro ao enviar. Tente novamente.");
+      setMessageType("error");
+      console.error("Erro:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   // ============================================================
@@ -521,6 +560,7 @@ function Solicitacao() {
                       </p>
                     </div>
                   </div>
+
                   <form
                     ref={form}
                     onSubmit={handleSubmit}
@@ -549,9 +589,8 @@ function Solicitacao() {
                       )}
                     </div>
 
-                    {/* ✅ E-mail e WhatsApp lado a lado */}
+                    {/* E-mail e WhatsApp lado a lado */}
                     <div className="grid sm:grid-cols-2 gap-4">
-                      {/* E-mail */}
                       <div>
                         <label className="block text-sm font-semibold text-yale-blue mb-1">
                           E-mail <span className="text-red-500">*</span>
@@ -572,8 +611,6 @@ function Solicitacao() {
                           </p>
                         )}
                       </div>
-
-                      {/* WhatsApp */}
                       <div>
                         <label className="block text-sm font-semibold text-yale-blue mb-1">
                           WhatsApp <span className="text-red-500">*</span>
@@ -664,7 +701,6 @@ function Solicitacao() {
           {/* COLUNA LATERAL                                                   */}
           {/* ============================================================ */}
           <div className="space-y-6">
-            {/* Resumo do Pedido */}
             <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
               <h3 className="text-lg font-bold text-yale-blue mb-4">
                 <Wallet className="w-5 h-5 inline mr-2" />
@@ -752,7 +788,6 @@ function Solicitacao() {
               )}
             </div>
 
-            {/* Como Funciona */}
             <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
               <h3 className="text-lg font-bold text-yale-blue mb-4">
                 Como Funciona
@@ -775,7 +810,6 @@ function Solicitacao() {
         </div>
       </div>
 
-      {/* Modal */}
       <ProductModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
