@@ -9,6 +9,8 @@ import Home from "./pages/home/home";
 import Produtos from "./pages/produtos/produtos";
 import Solicitacao from "./pages/solicitacao/solicitacao";
 import SobreNos from "./pages/sobre/sobreNos";
+import PoliticaPrivacidade from "./pages/politicaPriv/politicaPrivacidade";
+import TermosUso from "./pages/termosUso/termosUso";
 
 function App() {
   return (
@@ -25,6 +27,11 @@ function App() {
               <Route path="/contato" element={<Contato />} />
               <Route path="/parceiros" element={<Parceiros />} />
               <Route path="/sobre-nos" element={<SobreNos />} />
+              <Route
+                path="/politica-privacidade"
+                element={<PoliticaPrivacidade />}
+              />
+              <Route path="/termos-uso" element={<TermosUso />} />
             </Routes>
           </main>
           <Footer />

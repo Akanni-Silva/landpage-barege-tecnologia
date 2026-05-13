@@ -117,19 +117,19 @@ function Footer() {
             reservados.
           </p>
           <div className="mt-4 md:mt-0">
-            <a
-              href="#"
+            <Link
+              to="/politica-privacidade"
               className="text-bright-snow hover:text-white transition text-sm"
             >
               Política de Privacidade
-            </a>
+            </Link>
             <span className="mx-2 text-rich-cerulean">|</span>
-            <a
-              href="#"
+            <Link
+              to="/termos-uso"
               className="text-bright-snow hover:text-white transition text-sm"
             >
               Termos de Uso
-            </a>
+            </Link>
           </div>
         </div>
       </div>
