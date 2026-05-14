@@ -153,7 +153,7 @@ function Home() {
       </section>
 
       {/* ===== HERO DESKTOP - CARROSSEL ===== */}
-      <section className="hidden md:block relative h-[500px] overflow-hidden">
+      <section className="hidden md:block relative h-190 overflow-hidden">
         <div className="absolute inset-0">
           {banners.map((banner, index) => (
             <div
