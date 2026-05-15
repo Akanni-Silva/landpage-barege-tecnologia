@@ -19,7 +19,7 @@ function Contato() {
   return (
     <div className="bg-bright-snow">
       {/* Banner */}
-      <section className="bg-gradient-to-br from-yale-blue to-rich-cerulean py-16">
+      <section className="bg-linerar-to-br from-yale-blue to-rich-cerulean py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl font-extrabold text-white mb-4">
             Entre em Contato
@@ -55,7 +55,7 @@ function Contato() {
               <div className="grid sm:grid-cols-2 gap-6">
                 {/* Endereço */}
                 <div className="flex items-start gap-3 p-4 bg-bright-snow rounded-xl">
-                  <MapPin className="w-6 h-6 text-rich-cerulean flex-shrink-0 mt-1" />
+                  <MapPin className="w-6 h-6 text-rich-cerulean shrink-0 mt-1" />
                   <div>
                     <h3 className="font-semibold text-yale-blue mb-1">
                       Endereço
@@ -69,7 +69,7 @@ function Contato() {
 
                 {/* Telefone */}
                 <div className="flex items-start gap-3 p-4 bg-bright-snow rounded-xl">
-                  <Phone className="w-6 h-6 text-rich-cerulean flex-shrink-0 mt-1" />
+                  <Phone className="w-6 h-6 text-rich-cerulean shrink-0 mt-1" />
                   <div>
                     <h3 className="font-semibold text-yale-blue mb-1">
                       Telefone / WhatsApp
@@ -90,7 +90,7 @@ function Contato() {
 
                 {/* E-mail */}
                 <div className="flex items-start gap-3 p-4 bg-bright-snow rounded-xl">
-                  <Mail className="w-6 h-6 text-rich-cerulean flex-shrink-0 mt-1" />
+                  <Mail className="w-6 h-6 text-rich-cerulean shrink-0 mt-1" />
                   <div>
                     <h3 className="font-semibold text-yale-blue mb-1">
                       E-mail
@@ -106,7 +106,7 @@ function Contato() {
 
                 {/* Horário de Atendimento */}
                 <div className="flex items-start gap-3 p-4 bg-bright-snow rounded-xl">
-                  <Clock className="w-6 h-6 text-rich-cerulean flex-shrink-0 mt-1" />
+                  <Clock className="w-6 h-6 text-rich-cerulean shrink-0 mt-1" />
                   <div>
                     <h3 className="font-semibold text-yale-blue mb-1">
                       Horário de Atendimento
@@ -171,7 +171,7 @@ function Contato() {
               </h2>
               <div className="space-y-4 text-gray-600">
                 <div className="flex items-start gap-3 p-4 bg-bright-snow rounded-xl">
-                  <Shield className="w-5 h-5 text-rich-cerulean flex-shrink-0 mt-0.5" />
+                  <Shield className="w-5 h-5 text-rich-cerulean shrink-0 mt-0.5" />
                   <div>
                     <h3 className="font-semibold text-yale-blue">
                       Certificação Digital
@@ -185,7 +185,7 @@ function Contato() {
                   </div>
                 </div>
                 <div className="flex items-start gap-3 p-4 bg-bright-snow rounded-xl">
-                  <Globe className="w-5 h-5 text-rich-cerulean flex-shrink-0 mt-0.5" />
+                  <Globe className="w-5 h-5 text-rich-cerulean shrink-0 mt-0.5" />
                   <div>
                     <h3 className="font-semibold text-yale-blue">
                       Atendimento Nacional
@@ -198,7 +198,7 @@ function Contato() {
                   </div>
                 </div>
                 <div className="flex items-start gap-3 p-4 bg-bright-snow rounded-xl">
-                  <ExternalLink className="w-5 h-5 text-rich-cerulean flex-shrink-0 mt-0.5" />
+                  <ExternalLink className="w-5 h-5 text-rich-cerulean shrink-0 mt-0.5" />
                   <div>
                     <h3 className="font-semibold text-yale-blue">Parcerias</h3>
                     <p className="text-sm mt-1">
