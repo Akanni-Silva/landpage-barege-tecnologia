@@ -13,6 +13,7 @@ import { Link } from "react-router-dom";
 import { companyInfo } from "../../data";
 import DepoimentoCard from "../../components/cards/depoimentosCard";
 import { depoimentosData } from "../../data/depoimentoData";
+import baregeLogo from "../../assets/baregeLogo.png";
 
 function SobreNos() {
   // Diferenciais
@@ -127,10 +128,7 @@ function SobreNos() {
             </div>
             <div className="relative">
               <div className="aspect-square bg-linear-to-br from-baby-blue-ice to-rich-cerulean rounded-2xl flex items-center justify-center">
-                <img
-                  src="/src/assets/baregeLogo.png"
-                  alt="Logo barege tecnologia"
-                />
+                <img src={baregeLogo} alt="logo da barege tecnologia" />
               </div>
               <div className="absolute -bottom-4 -right-4 bg-yale-blue text-white rounded-2xl p-6 shadow-xl">
                 <p className="text-3xl font-bold">+5.000</p>
