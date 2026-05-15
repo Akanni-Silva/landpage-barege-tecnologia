@@ -12,6 +12,8 @@ import {
 } from "lucide-react";
 import { companyInfo } from "../../data";
 import { InstagramLogoIcon } from "@phosphor-icons/react";
+import { Link } from "react-router-dom";
+import baregeLogo from "../../assets/baregeLogo.png";
 
 function Contato() {
   return (
@@ -35,9 +37,11 @@ function Contato() {
             {/* Cartão de Visitas Digital */}
             <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-16 h-16 bg-yale-blue rounded-full flex items-center justify-center">
-                  <Shield className="w-8 h-8 text-baby-blue-ice" />
-                </div>
+                <img
+                  src={baregeLogo}
+                  alt="logo da barege tecnologia"
+                  className="h-17 w-auto"
+                />
                 <div>
                   <h2 className="text-2xl font-bold text-yale-blue">
                     {companyInfo.name}
@@ -241,30 +245,30 @@ function Contato() {
                 Links Rápidos
               </h3>
               <div className="space-y-2">
-                <a
-                  href="/solicitacao"
+                <Link
+                  to="/solicitacao"
                   className="block p-3 bg-bright-snow rounded-lg text-sm text-yale-blue hover:bg-blue-50 transition font-medium"
                 >
                   📋 Solicitar Certificado
-                </a>
-                <a
-                  href="/produtos"
+                </Link>
+                <Link
+                  to="/produtos"
                   className="block p-3 bg-bright-snow rounded-lg text-sm text-yale-blue hover:bg-blue-50 transition font-medium"
                 >
                   🛒 Ver Produtos
-                </a>
-                <a
-                  href="/como-funciona"
+                </Link>
+                <Link
+                  to="/como-funciona"
                   className="block p-3 bg-bright-snow rounded-lg text-sm text-yale-blue hover:bg-blue-50 transition font-medium"
                 >
                   ❓ Como Funciona
-                </a>
-                <a
-                  href="/parceiros"
+                </Link>
+                <Link
+                  to="/parceiros"
                   className="block p-3 bg-bright-snow rounded-lg text-sm text-yale-blue hover:bg-blue-50 transition font-medium"
                 >
                   🤝 Seja Parceiro
-                </a>
+                </Link>
               </div>
             </div>
           </div>
