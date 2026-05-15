@@ -327,7 +327,7 @@ function Home() {
             ))}
 
             {/* Card 3: Escolha seu Certificado */}
-            <div className="bg-linaer-to-br from-yale-blue to-rich-cerulean rounded-2xl p-6 shadow-md hover:shadow-xl transition-shadow duration-300 border border-rich-cerulean text-white">
+            <div className="bg-linear-to-br from-yale-blue to-rich-cerulean rounded-2xl p-6 shadow-md hover:shadow-xl transition-shadow duration-300 border border-rich-cerulean text-white">
               <div className="text-center mb-6">
                 <Search className="w-10 h-10 text-baby-blue-ice mx-auto mb-3" />
                 <h3 className="text-xl font-bold mb-2">
@@ -337,6 +337,7 @@ function Home() {
                   Clique no tipo desejado e solicite agora mesmo
                 </p>
               </div>
+
               <div className="space-y-2 mb-4">
                 {categorias.slice(0, 2).map((cat, i) => (
                   <Link
@@ -366,6 +367,7 @@ function Home() {
                   </Link>
                 ))}
               </div>
+
               <Link
                 to="/solicitacao"
                 className="block w-full py-3 bg-white text-yale-blue font-semibold rounded-full hover:bg-bright-snow transition text-center text-sm"
