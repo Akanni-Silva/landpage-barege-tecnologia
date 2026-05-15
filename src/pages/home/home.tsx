@@ -127,7 +127,7 @@ function Home() {
   return (
     <>
       {/* ===== HERO MOBILE/TABLET ===== */}
-      <section className="block md:hidden bg-gradient-to-br from-yale-blue to-rich-cerulean py-20">
+      <section className="block md:hidden bg-linear-to-br from-yale-blue to-rich-cerulean py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-3xl sm:text-4xl font-extrabold text-white mb-6">
             Certificado Digital
@@ -153,7 +153,7 @@ function Home() {
       </section>
 
       {/* ===== HERO DESKTOP - CARROSSEL ===== */}
-      <section className="hidden md:block relative h-190 overflow-hidden">
+      <section className="hidden md:block relative h-[35rem] overflow-hidden">
         <div className="absolute inset-0">
           {banners.map((banner, index) => (
             <div
@@ -196,7 +196,7 @@ function Home() {
       </section>
 
       {/* ===== BARRA DE CTAs (DESKTOP) ===== */}
-      <section className="hidden md:block bg-gradient-to-r from-yale-blue to-rich-cerulean py-6">
+      <section className="hidden md:block bg-linear-to-r from-yale-blue to-rich-cerulean py-6">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
@@ -327,7 +327,7 @@ function Home() {
             ))}
 
             {/* Card 3: Escolha seu Certificado */}
-            <div className="bg-gradient-to-br from-yale-blue to-rich-cerulean rounded-2xl p-6 shadow-md hover:shadow-xl transition-shadow duration-300 border border-rich-cerulean text-white">
+            <div className="bg-linaer-to-br from-yale-blue to-rich-cerulean rounded-2xl p-6 shadow-md hover:shadow-xl transition-shadow duration-300 border border-rich-cerulean text-white">
               <div className="text-center mb-6">
                 <Search className="w-10 h-10 text-baby-blue-ice mx-auto mb-3" />
                 <h3 className="text-xl font-bold mb-2">
@@ -473,7 +473,7 @@ function Home() {
               </div>
             </div>
             <div className="lg:col-span-2">
-              <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden h-full min-h-[400px]">
+              <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden h-full min-h-100">
                 <iframe
                   src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3658.122857672406!2d-46.79169468440715!3d-23.52858468470034!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ceff095c5e5b8d%3A0x9e4e4e4e4e4e4e4e!2sAv.%20dos%20Autonomistas%2C%202561%20-%20Vila%20Osasco%2C%20Osasco%20-%20SP!5e0!3m2!1spt-BR!2sbr!4v1625000000000!5m2!1spt-BR!2sbr"
                   width="100%"
