@@ -128,7 +128,7 @@ function SobreNos() {
             <div className="relative">
               <div className="aspect-square bg-linear-to-br from-baby-blue-ice to-rich-cerulean rounded-2xl flex items-center justify-center">
                 <img
-                  src="https://i.postimg.cc/MTzjRQky/barege-Logo.png"
+                  src="/src/assets/baregeLogo.png"
                   alt="Logo barege tecnologia"
                 />
               </div>
