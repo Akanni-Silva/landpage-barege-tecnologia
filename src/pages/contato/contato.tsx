@@ -19,7 +19,7 @@ function Contato() {
   return (
     <div className="bg-bright-snow">
       {/* Banner */}
-      <section className="bg-linerar-to-br from-yale-blue to-rich-cerulean py-16">
+      <section className="bg-linear-to-br from-yale-blue to-rich-cerulean py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl font-extrabold text-white mb-4">
             Entre em Contato
