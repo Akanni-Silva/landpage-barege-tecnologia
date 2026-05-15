@@ -2,7 +2,6 @@
 // src/pages/Solicitacao.tsx
 import { useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { sendForm } from "@emailjs/browser";
 import {
   FileCheck,
   Loader2,
@@ -26,6 +25,10 @@ import {
 import { formatPrice, validarDocumento, validarTelefone } from "../../utils";
 import { ProductModal } from "../../components/modals/productModal";
 import { getMidiaPorId, getVisualPorTipo } from "../../services/productService";
+import {
+  enviarEmailBarege,
+  enviarEmailConfirmacaoCliente,
+} from "../../services";
 import type { FormErrors } from "../../models/ErrosModel";
 import {
   midiasCertificado,
@@ -33,11 +36,10 @@ import {
   validadesCertificado,
 } from "../../data";
 import type { DadosModalProduto } from "../../models/productModel";
-
-// ============================================================
-// CONFIGURAÇÃO
-// ============================================================
-const WHATSAPP_NUMERO = "5511998606204"; // Número da Barege (DDI+DDD+Número)
+import {
+  abrirWhatsApp,
+  montarMensagemWhatsApp,
+} from "../../services/wppService";
 
 // ============================================================
 // MAPEAMENTO DE ÍCONES
@@ -191,31 +193,7 @@ function Solicitacao() {
   const precoFinal = calcularPreco();
 
   // ============================================================
-  // MONTAR MENSAGEM PARA WHATSAPP (enviada pelo próprio cliente)
-  // ============================================================
-  const montarMensagemWhatsApp = (
-    nome: string,
-    email: string,
-    whatsapp: string,
-    documento: string,
-  ): string => {
-    return (
-      `Olá! Gostaria de solicitar meu Certificado Digital.%0A%0A` +
-      `*Meus dados:*%0A` +
-      `👤 Nome: ${nome}%0A` +
-      `📧 E-mail: ${email}%0A` +
-      `📱 WhatsApp: ${whatsapp}%0A` +
-      `📄 Documento: ${documento}%0A%0A` +
-      `*Produto escolhido:*%0A` +
-      `🔒 Tipo: ${tipo?.nome || "—"}%0A` +
-      `💾 Mídia: ${midia?.nome || "—"}%0A` +
-      `📅 Validade: ${validade?.nome || "—"}%0A` +
-      `💰 Total: ${formatPrice(precoFinal)}%0A%0A` +
-      `Aguardo contato para prosseguir com a emissão. Obrigado! 🙏`
-    );
-  };
-  // ============================================================
-  // SUBMISSÃO DO FORMULÁRIO (EMAIL + WHATSAPP)
+  // SUBMISSÃO DO FORMULÁRIO
   // ============================================================
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -260,7 +238,7 @@ function Solicitacao() {
     }
 
     // ============================================================
-    // PREPARAR CAMPOS HIDDEN (PARA EMAIL)
+    // PREPARAR CAMPOS HIDDEN (PARA EMAIL DA BAREGE)
     // ============================================================
     const oldTipo = form.current.querySelector(
       'input[name="tipo-certificado"]',
@@ -282,34 +260,43 @@ function Solicitacao() {
     form.current.appendChild(inputData);
 
     // ============================================================
-    // ENVIO
+    // ENVIO (VIA SERVIÇOS)
     // ============================================================
     setErrors({});
     setIsSubmitting(true);
 
     try {
-      // ✅ 1. Enviar por EmailJS
-      await sendForm(
-        "service_owuos8i",
-        "template_omknf2m",
-        form.current,
-        "_FstKZ8T_TaD7uNMf",
-      );
+      // ✅ 1. Enviar e-mail para a Barege
+      await enviarEmailBarege(form.current);
 
-      // ✅ 2. Abrir WhatsApp em segunda aba
-      const mensagemWpp = montarMensagemWhatsApp(
+      // ✅ 2. Enviar e-mail de confirmação para o CLIENTE
+      await enviarEmailConfirmacaoCliente({
         nome,
         email,
         whatsapp,
         documento,
-      );
-      window.open(
-        `https://wa.me/${WHATSAPP_NUMERO}?text=${mensagemWpp}`,
-        "_blank",
-      );
+        tipo: tipo?.nome || "—",
+        midia: midia?.nome || "—",
+        validade: validade?.nome || "—",
+        preco: formatPrice(precoFinal),
+        dataEnvio: new Date().toLocaleDateString("pt-BR"),
+      });
+
+      // ✅ 3. Abrir WhatsApp em segunda aba
+      const mensagemWpp = montarMensagemWhatsApp({
+        nome,
+        email,
+        whatsapp,
+        documento,
+        tipo: tipo?.nome || "—",
+        midia: midia?.nome || "—",
+        validade: validade?.nome || "—",
+        preco: formatPrice(precoFinal),
+      });
+      abrirWhatsApp(mensagemWpp);
 
       setSubmitMessage(
-        "✅ Solicitação enviada com sucesso! Entraremos em contato em breve.",
+        "✅ Solicitação enviada com sucesso! Um e-mail de confirmação foi enviado para você.",
       );
       setMessageType("success");
       form.current?.reset();
@@ -346,9 +333,7 @@ function Solicitacao() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid lg:grid-cols-3 gap-8">
-          {/* ============================================================ */}
-          {/* COLUNA PRINCIPAL - ETAPAS DO FORMULÁRIO                       */}
-          {/* ============================================================ */}
+          {/* COLUNA PRINCIPAL - ETAPAS DO FORMULÁRIO */}
           <div className="lg:col-span-2">
             <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
               {/* Barra de progresso */}
@@ -697,9 +682,7 @@ function Solicitacao() {
             </div>
           </div>
 
-          {/* ============================================================ */}
-          {/* COLUNA LATERAL                                                   */}
-          {/* ============================================================ */}
+          {/* COLUNA LATERAL */}
           <div className="space-y-6">
             <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
               <h3 className="text-lg font-bold text-yale-blue mb-4">
