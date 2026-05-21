@@ -141,13 +141,13 @@ function Home() {
               to="/solicitacao"
               className="px-8 py-4 bg-white text-yale-blue font-semibold rounded-full hover:bg-bright-snow transition shadow-lg"
             >
-              Quero Meu Certificado
+              Peça o seu agora
             </Link>
             <Link
               to="/produtos"
               className="px-8 py-4 border-2 border-white text-white font-semibold rounded-full hover:bg-white/10 transition"
             >
-              Ver Preços
+              Qual o seu certificado ?
             </Link>
           </div>
         </div>
@@ -204,13 +204,13 @@ function Home() {
               to="/solicitacao"
               className="w-full sm:w-auto px-8 py-3 bg-white text-yale-blue font-semibold rounded-full hover:bg-bright-snow transition shadow-lg text-center flex items-center justify-center gap-2"
             >
-              Solicitar Agora <ChevronRight className="w-4 h-4" />
+              Peça o seu agora <ChevronRight className="w-4 h-4" />
             </Link>
             <Link
               to="/produtos"
               className="w-full sm:w-auto px-8 py-3 border-2 border-white text-white font-semibold rounded-full hover:bg-white/10 transition text-center"
             >
-              Ver Produtos
+              Qual o seu certificado ?
             </Link>
           </div>
         </div>
