@@ -11,7 +11,6 @@ const categorias = [
 ];
 
 // Tipos de mídia
-// Tipos de mídia - IDs corrigidos para bater com os dados
 const tiposMidia = [
   { id: "todos", nome: "Todos" },
   { id: "A1 - Sem Mídia", nome: "A1 - Sem Mídia" },
@@ -20,7 +19,7 @@ const tiposMidia = [
   { id: "A3 - Cartão com Leitora", nome: "A3 - Cartão com Leitora" },
 ];
 
-// Validades (sem 3 anos)
+// Validades
 const validades = [
   { id: "todas", nome: "Todas" },
   { id: "1 Ano", nome: "1 Ano" },
@@ -69,13 +68,10 @@ function Produtos() {
     // Ordenação
     switch (ordenacao) {
       case "menor-preco":
-        filtrados.sort((a, b) => a.precoDesconto - b.precoDesconto);
+        filtrados.sort((a, b) => a.precoOriginal - b.precoOriginal);
         break;
       case "maior-preco":
-        filtrados.sort((a, b) => b.precoDesconto - a.precoDesconto);
-        break;
-      case "maior-desconto":
-        filtrados.sort((a, b) => b.desconto - a.desconto);
+        filtrados.sort((a, b) => b.precoOriginal - a.precoOriginal);
         break;
       case "nome-az":
         filtrados.sort((a, b) => a.nome.localeCompare(b.nome));
@@ -101,11 +97,10 @@ function Produtos() {
     validadeAtiva !== "todas" ||
     busca.trim() !== "";
 
-  // ✅ Texto de resultado corrigido
   const textoResultado =
     produtosFiltrados.length === 1
-      ? "1 produto encontrado"
-      : `${produtosFiltrados.length} produtos encontrados`;
+      ? "1 resultado"
+      : `${produtosFiltrados.length} resultados`;
 
   return (
     <div className="bg-bright-snow min-h-screen">
@@ -113,11 +108,10 @@ function Produtos() {
       <section className="bg-linear-to-br from-yale-blue to-rich-cerulean py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl font-extrabold text-white mb-4">
-            Nossos Produtos
+            Todos os Certificados
           </h1>
-          <p className="text-xl text-baby-blue-ice max-w-3xl mx-auto">
-            Encontre o certificado digital ideal para você com até 15% de
-            desconto
+          <p className="text-xl text-baby-blue-ice">
+            Escolha o seu e solicite agora
           </p>
         </div>
       </section>
@@ -131,7 +125,7 @@ function Produtos() {
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
               <input
                 type="text"
-                placeholder="Buscar certificado..."
+                placeholder="Buscar..."
                 value={busca}
                 onChange={(e) => setBusca(e.target.value)}
                 className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-rich-cerulean focus:border-transparent transition bg-white text-gray-700"
@@ -155,7 +149,6 @@ function Produtos() {
               <option value="relevancia">Mais Relevantes</option>
               <option value="menor-preco">Menor Preço</option>
               <option value="maior-preco">Maior Preço</option>
-              <option value="maior-desconto">Maior Desconto</option>
               <option value="nome-az">Nome A-Z</option>
             </select>
 
@@ -206,9 +199,7 @@ function Produtos() {
 
             {/* Tipo de Mídia */}
             <div>
-              <p className="text-sm font-semibold text-yale-blue mb-2">
-                Mídia / Armazenamento
-              </p>
+              <p className="text-sm font-semibold text-yale-blue mb-2">Mídia</p>
               <div className="flex flex-wrap gap-2">
                 {tiposMidia.map((midia) => (
                   <button
@@ -255,26 +246,26 @@ function Produtos() {
                 className="text-sm text-red-500 hover:text-red-700 transition flex items-center gap-1"
               >
                 <X className="w-4 h-4" />
-                Limpar todos os filtros
+                Limpar filtros
               </button>
             )}
           </div>
         </div>
 
-        {/* ✅ Contador de resultados (corrigido) */}
+        {/* Contador de resultados */}
         <div className="mb-4">
           <p className="text-sm text-gray-500">{textoResultado}</p>
         </div>
 
-        {/* ✅ Lógica de exibição corrigida */}
+        {/* Resultados */}
         {produtosFiltrados.length === 0 ? (
           <div className="text-center py-16">
             <Search className="w-16 h-16 text-gray-300 mx-auto mb-4" />
             <h3 className="text-xl font-bold text-yale-blue mb-2">
-              Nenhum produto encontrado
+              Nada encontrado
             </h3>
             <p className="text-gray-500 mb-6">
-              Tente ajustar os filtros ou limpar a busca
+              Tente outros filtros ou limpe a busca
             </p>
             <button
               onClick={limparFiltros}

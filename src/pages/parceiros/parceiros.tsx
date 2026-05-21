@@ -13,51 +13,50 @@ function Parceiros() {
   const vantagens = [
     {
       icon: Percent,
-      title: "Comissão por Emissão",
-      desc: "Receba comissão por cada certificado emitido e renovado dos seus clientes.",
+      title: "15% de Desconto",
+      desc: "Em cada certificado emitido e renovado dos seus clientes.",
     },
     {
       icon: Shield,
-      title: "Processo Completo",
-      desc: "Nós cuidamos de todo o processo de emissão, suporte e renovação.",
+      title: "Nós Cuidamos de Tudo",
+      desc: "Emissão, suporte e renovação por nossa conta.",
     },
     {
       icon: Users,
-      title: "Atendimento Exclusivo",
-      desc: "Atendimento personalizado para você e seus clientes.",
+      title: "Atendimento VIP",
+      desc: "Canal exclusivo para você e seus clientes.",
     },
     {
       icon: TrendingUp,
-      title: "Renda Recorrente",
-      desc: "Ganhe todos os anos com as renovações dos certificados.",
+      title: "Renda Todo Ano",
+      desc: "Ganhe em cada renovação. Sempre.",
     },
   ];
 
   return (
     <div className="bg-bright-snow">
       {/* Banner */}
-      <section className="bg-gradient-to-br from-yale-blue to-rich-cerulean py-20">
+      <section className="bg-linear-to-br from-yale-blue to-rich-cerulean py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <Building2 className="w-16 h-16 text-baby-blue-ice mx-auto mb-6" />
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-white mb-4">
-            Seja um Parceiro
+          <h1 className="text-4xl sm:text-5xl font-extrabold text-white mb-4">
+            Seja Parceiro e Garanta 15% OFF
           </h1>
-          <p className="text-xl text-baby-blue-ice max-w-3xl mx-auto">
-            Contador, ganhe comissão com seus clientes. Você indica e nós
-            cuidamos de todo o processo.
+          <p className="text-xl text-baby-blue-ice max-w-2xl mx-auto">
+            Indique clientes, receba desconto. Simples assim.
           </p>
         </div>
       </section>
 
-      {/* Como funciona a parceria */}
+      {/* Como funciona */}
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-extrabold text-yale-blue sm:text-4xl">
-              Como Funciona a Parceria
+              Como Funciona
             </h2>
-            <p className="mt-4 text-lg text-gray-500">
-              Simples, rápido e lucrativo para você
+            <p className="mt-3 text-lg text-gray-500">
+              Você indica. Nós fazemos. Você ganha.
             </p>
           </div>
 
@@ -80,32 +79,24 @@ function Parceiros() {
         </div>
       </section>
 
-      {/* Vantagens detalhadas */}
+      {/* Vantagens + Formulário */}
       <section className="py-16 bg-bright-snow-2">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="lg:flex lg:items-center lg:justify-between gap-12">
+          <div className="lg:flex lg:items-start lg:justify-between gap-12">
             <div className="lg:w-1/2 mb-10 lg:mb-0">
               <h2 className="text-3xl font-extrabold text-yale-blue sm:text-4xl mb-6">
-                Por que ser nosso parceiro?
+                Por que ser parceiro?
               </h2>
-              <p className="text-lg text-gray-600 mb-8">
-                A {companyInfo.name} oferece uma das melhores oportunidades de
-                parceria do mercado. Você aumenta sua receita oferecendo um
-                serviço essencial para seus clientes, sem se preocupar com a
-                operação.
-              </p>
 
               <ul className="space-y-4 mb-8">
                 {[
-                  "Comissão por cada certificado emitido e renovado",
+                  "Comissão em cada certificado emitido e renovado",
                   "Suporte completo para você e seus clientes",
-                  "Ampla rede de atendimento presencial e online",
+                  "Atendimento presencial e online em todo Brasil",
                   "Emissão rápida e sem burocracia",
-                  "Materiais de divulgação personalizados",
-                  "Acompanhamento de todas as etapas do processo",
                 ].map((item, i) => (
                   <li key={i} className="flex items-start gap-3">
-                    <div className="w-6 h-6 bg-baby-blue-ice rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <div className="w-6 h-6 bg-baby-blue-ice rounded-full flex items-center justify-center shrink-0 mt-0.5">
                       <ChevronRight className="w-4 h-4 text-yale-blue" />
                     </div>
                     <span className="text-gray-600">{item}</span>
@@ -127,49 +118,29 @@ function Parceiros() {
             <div className="lg:w-1/2">
               <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-100">
                 <h3 className="text-xl font-bold text-yale-blue mb-6">
-                  Preencha seus dados e fale conosco
+                  Cadastre-se e garanta 15% OFF
                 </h3>
                 <form className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-semibold text-yale-blue mb-1">
-                      Nome Completo
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="Digite seu nome"
-                      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-rich-cerulean transition bg-white"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-semibold text-yale-blue mb-1">
-                      WhatsApp
-                    </label>
-                    <input
-                      type="tel"
-                      placeholder="(11) 99999-9999"
-                      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-rich-cerulean transition bg-white"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-semibold text-yale-blue mb-1">
-                      E-mail
-                    </label>
-                    <input
-                      type="email"
-                      placeholder="seu@email.com"
-                      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-rich-cerulean transition bg-white"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-semibold text-yale-blue mb-1">
-                      CRC ou CNPJ
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="Seu registro profissional"
-                      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-rich-cerulean transition bg-white"
-                    />
-                  </div>
+                  <input
+                    type="text"
+                    placeholder="Nome completo"
+                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-rich-cerulean transition bg-white"
+                  />
+                  <input
+                    type="tel"
+                    placeholder="WhatsApp (11) 99999-9999"
+                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-rich-cerulean transition bg-white"
+                  />
+                  <input
+                    type="email"
+                    placeholder="E-mail"
+                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-rich-cerulean transition bg-white"
+                  />
+                  <input
+                    type="text"
+                    placeholder="CRC ou CNPJ"
+                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-rich-cerulean transition bg-white"
+                  />
                   <a
                     href={companyInfo.whatsappLink}
                     target="_blank"
@@ -178,7 +149,7 @@ function Parceiros() {
                   >
                     <span className="flex items-center justify-center gap-2">
                       <MessageCircle className="w-5 h-5" />
-                      Enviar pelo WhatsApp
+                      Quero ser parceiro
                     </span>
                   </a>
                 </form>
@@ -189,14 +160,13 @@ function Parceiros() {
       </section>
 
       {/* CTA Final */}
-      <section className="py-16 bg-gradient-to-r from-rich-cerulean to-yale-blue">
+      <section className="py-16 bg-linear-to-r from-rich-cerulean to-yale-blue">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-extrabold text-white sm:text-4xl mb-4">
-            Comece a Ganhar Hoje
+            Garanta 15% OFF Agora
           </h2>
           <p className="text-lg text-baby-blue-ice mb-8">
-            Entre em contato e descubra como aumentar sua receita com
-            certificados digitais
+            Aumente sua renda com certificados digitais
           </p>
           <a
             href={companyInfo.whatsappLink}

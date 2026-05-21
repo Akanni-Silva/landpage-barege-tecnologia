@@ -56,7 +56,6 @@ export interface Produto {
   precoOriginal: number;
   precoDesconto: number;
   desconto: number;
-  parcelamento: string;
   caracteristicas: string[];
   popular?: boolean;
 }

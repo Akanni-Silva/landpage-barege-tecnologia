@@ -11,6 +11,7 @@ import Solicitacao from "./pages/solicitacao/solicitacao";
 import SobreNos from "./pages/sobre/sobreNos";
 import PoliticaPrivacidade from "./pages/politicaPriv/politicaPrivacidade";
 import TermosUso from "./pages/termosUso/termosUso";
+import CookieModal from "./components/modals/CookieModal";
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
             </Routes>
           </main>
           <Footer />
+          <CookieModal />
         </div>
       </BrowserRouter>
     </>

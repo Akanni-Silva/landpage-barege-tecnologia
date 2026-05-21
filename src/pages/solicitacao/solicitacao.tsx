@@ -34,6 +34,7 @@ import {
   midiasCertificado,
   tiposCertificado,
   validadesCertificado,
+  todosProdutos,
 } from "../../data";
 import type { DadosModalProduto } from "../../models/productModel";
 import {
@@ -54,6 +55,31 @@ const iconeMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Usb,
   Clock,
   Calendar,
+};
+
+// ============================================================
+// HELPER: Buscar preço exato na tabela de produtos
+// ============================================================
+const buscarPrecoProduto = (
+  tipoId: string,
+  midiaId: string,
+  validadeId: string,
+): number => {
+  const produto = todosProdutos.find((p) => {
+    const tipoMatch =
+      tipoId === "ecpf" ? p.nome === "e-CPF" : p.nome === "e-CNPJ";
+    const midiaMatch = midiasCertificado.find((m) => m.id === midiaId);
+    const validadeMatch = validadesCertificado.find((v) => v.id === validadeId);
+
+    return (
+      tipoMatch &&
+      midiaMatch &&
+      p.tipo === midiaMatch.nome &&
+      p.duracao === validadeMatch?.nome
+    );
+  });
+
+  return produto?.precoOriginal || 0;
 };
 
 // ============================================================
@@ -78,7 +104,8 @@ const getValoresIniciais = (produtoSelecionado: string | null) => {
   else if (produtoSelecionado.includes("a3-cartao")) midia = "a3-cartao";
   else if (produtoSelecionado.includes("a3")) midia = "a3-sem-midia";
 
-  validade = "1-ano";
+  if (produtoSelecionado.includes("2anos")) validade = "2-anos";
+  else validade = "1-ano";
 
   return { tipo, midia, validade };
 };
@@ -150,6 +177,15 @@ function Solicitacao() {
   const validade = validadesCertificado.find((v) => v.id === validadeEscolhida);
 
   // ============================================================
+  // PREÇO FINAL - Buscado diretamente da tabela de produtos
+  // ============================================================
+  const precoFinal = buscarPrecoProduto(
+    tipoEscolhido,
+    midiaEscolhida,
+    validadeEscolhida,
+  );
+
+  // ============================================================
   // DADOS PARA O MODAL
   // ============================================================
   const dadosModal: DadosModalProduto | null = (() => {
@@ -176,21 +212,6 @@ function Solicitacao() {
     if (!IconComponent) return <Shield className={className} />;
     return <IconComponent className={className} />;
   };
-
-  // ============================================================
-  // CÁLCULO DE PREÇO
-  // ============================================================
-  const calcularPreco = (): number => {
-    if (!tipo || !midia || !validade) return 0;
-
-    const precoBase = tipo.precoBase + midia.adicional;
-    const precoTotal = precoBase * validade.multiplicador;
-    const comDesconto = precoTotal * (1 - validade.desconto / 100);
-
-    return Math.round(comDesconto * 100) / 100;
-  };
-
-  const precoFinal = calcularPreco();
 
   // ============================================================
   // SUBMISSÃO DO FORMULÁRIO
@@ -320,7 +341,7 @@ function Solicitacao() {
   return (
     <div className="bg-bright-snow">
       {/* Banner */}
-      <section className="bg-gradient-to-br from-yale-blue to-rich-cerulean py-16">
+      <section className="bg-linear-to-br from-yale-blue to-rich-cerulean py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl font-extrabold text-white mb-4">
             Solicite seu Certificado Digital
@@ -422,6 +443,9 @@ function Solicitacao() {
                   <div className="space-y-3">
                     {midiasCertificado.map((m) => {
                       const visual = getVisualPorTipo(m.infoTitulo);
+                      // ✅ Mostrar preço final (tipo + mídia) para 1 ano
+                      const precoComMidia =
+                        (tipo?.precoBase || 0) + m.adicional;
                       return (
                         <button
                           key={m.id}
@@ -448,13 +472,9 @@ function Solicitacao() {
                             </p>
                           </div>
                           <div className="text-right shrink-0">
-                            {m.adicional > 0 ? (
+                            {tipo && (
                               <span className="text-sm font-semibold text-yale-blue">
-                                + {formatPrice(m.adicional)}
-                              </span>
-                            ) : (
-                              <span className="text-sm text-green-600 font-semibold">
-                                Incluso
+                                {formatPrice(precoComMidia)}
                               </span>
                             )}
                           </div>
@@ -465,6 +485,7 @@ function Solicitacao() {
                 </div>
               )}
 
+              {/* ETAPA 3: Validade */}
               {/* ETAPA 3: Validade */}
               {step === 3 && (
                 <div>
@@ -480,36 +501,57 @@ function Solicitacao() {
                     </h2>
                   </div>
                   <div className="space-y-3">
-                    {validadesCertificado.map((v) => (
-                      <button
-                        key={v.id}
-                        onClick={() => {
-                          setValidadeEscolhida(v.id);
-                          setStep(4);
-                        }}
-                        className={`w-full p-4 rounded-2xl border-2 text-left flex items-center gap-4 transition ${
-                          validadeEscolhida === v.id
-                            ? "border-yale-blue bg-blue-50"
-                            : "border-gray-200 hover:border-rich-cerulean"
-                        }`}
-                      >
-                        {renderIcon(
-                          v.icone,
-                          "w-8 h-8 text-rich-cerulean flex-shrink-0",
-                        )}
-                        <div className="grow">
-                          <h3 className="font-bold text-yale-blue">{v.nome}</h3>
-                          <p className="text-sm text-gray-500">{v.descricao}</p>
-                        </div>
-                        <div className="text-right shrink-0">
-                          {v.desconto > 0 && (
-                            <span className="inline-block bg-green-100 text-green-700 text-xs font-semibold px-2 py-0.5 rounded-full">
-                              {v.desconto}% OFF
-                            </span>
-                          )}
-                        </div>
-                      </button>
-                    ))}
+                    {validadesCertificado
+                      .filter((v) => {
+                        // ✅ Verificar se existe produto com esta combinação na tabela
+                        const preco = buscarPrecoProduto(
+                          tipoEscolhido,
+                          midiaEscolhida,
+                          v.id,
+                        );
+                        return preco > 0; // Só mostra se encontrou o produto
+                      })
+                      .map((v) => {
+                        const precoValidade = buscarPrecoProduto(
+                          tipoEscolhido,
+                          midiaEscolhida,
+                          v.id,
+                        );
+                        return (
+                          <button
+                            key={v.id}
+                            onClick={() => {
+                              setValidadeEscolhida(v.id);
+                              setStep(4);
+                            }}
+                            className={`w-full p-4 rounded-2xl border-2 text-left flex items-center gap-4 transition ${
+                              validadeEscolhida === v.id
+                                ? "border-yale-blue bg-blue-50"
+                                : "border-gray-200 hover:border-rich-cerulean"
+                            }`}
+                          >
+                            {renderIcon(
+                              v.icone,
+                              "w-8 h-8 text-rich-cerulean flex-shrink-0",
+                            )}
+                            <div className="grow">
+                              <h3 className="font-bold text-yale-blue">
+                                {v.nome}
+                              </h3>
+                              <p className="text-sm text-gray-500">
+                                {v.descricao}
+                              </p>
+                            </div>
+                            <div className="text-right shrink-0">
+                              {precoValidade > 0 && (
+                                <span className="text-sm font-semibold text-yale-blue">
+                                  {formatPrice(precoValidade)}
+                                </span>
+                              )}
+                            </div>
+                          </button>
+                        );
+                      })}
                   </div>
                 </div>
               )}
@@ -693,7 +735,7 @@ function Solicitacao() {
               {midiaVisual && (
                 <div className="relative flex justify-center mb-6">
                   <div
-                    className={`relative w-40 h-40 sm:w-44 sm:h-44 rounded-full border-4 ${midiaVisual.corBorda} ${midiaVisual.corSombra} shadow-xl animate-pulse-borda transition-all duration-700 ease-in-out bg-gradient-to-br from-bright-snow to-white flex items-center justify-center overflow-hidden`}
+                    className={`relative w-40 h-40 sm:w-44 sm:h-44 rounded-full border-4 ${midiaVisual.corBorda} ${midiaVisual.corSombra} shadow-xl animate-pulse-borda transition-all duration-700 ease-in-out bg-linear-to-br from-bright-snow to-white flex items-center justify-center overflow-hidden`}
                   >
                     <img
                       src={midiaVisual.imagem}
@@ -716,42 +758,16 @@ function Solicitacao() {
 
               {tipo && midia && validade ? (
                 <div className="space-y-3">
-                  <div className="flex justify-between text-sm">
+                  <div className="flex justify-center text-sm">
                     <span className="text-gray-500">{tipo.nome}</span>
-                    <span className="text-gray-700">
-                      {formatPrice(tipo.precoBase)}
-                    </span>
                   </div>
-                  {midia.adicional > 0 && (
-                    <div className="flex justify-between text-sm">
-                      <span className="text-gray-500">{midia.nome}</span>
-                      <span className="text-gray-700">
-                        + {formatPrice(midia.adicional)}
-                      </span>
-                    </div>
-                  )}
-                  <div className="flex justify-between text-sm">
+                  <div className="flex justify-center text-sm">
+                    <span className="text-gray-500">{midia.nome}</span>
+                  </div>
+                  <div className="flex justify-center text-sm">
                     <span className="text-gray-500">{validade.nome}</span>
-                    <span className="text-gray-700">
-                      x{validade.multiplicador}
-                    </span>
                   </div>
                   <hr className="border-gray-200" />
-                  {validade.desconto > 0 && (
-                    <div className="flex justify-between text-sm">
-                      <span className="text-green-600">
-                        Desconto {validade.desconto}%
-                      </span>
-                      <span className="text-green-600">
-                        -{" "}
-                        {formatPrice(
-                          (tipo.precoBase + midia.adicional) *
-                            validade.multiplicador *
-                            (validade.desconto / 100),
-                        )}
-                      </span>
-                    </div>
-                  )}
                   <div className="flex justify-between text-lg font-bold">
                     <span className="text-yale-blue">Total</span>
                     <span className="text-yale-blue">
@@ -759,7 +775,7 @@ function Solicitacao() {
                     </span>
                   </div>
                   <p className="text-xs text-gray-400">
-                    em até 12x no cartão de crédito
+                    Aceitamos paguamentos a vista,Cartão e Pix
                   </p>
                 </div>
               ) : (
@@ -777,7 +793,7 @@ function Solicitacao() {
               </h3>
               <div className="space-y-3">
                 {[
-                  { icon: CreditCard, text: "Escolha e pague em até 12x" },
+                  { icon: CreditCard, text: "Pague à Vista, Cartão ou Pix" },
                   { icon: Calendar, text: "Agende sua emissão" },
                   { icon: UserCheck, text: "Apresente os documentos" },
                   { icon: Video, text: "Emita presencial ou online" },

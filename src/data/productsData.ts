@@ -1,13 +1,10 @@
-// src/data/produtoData.ts
-
-
-
-// ✅ Import das imagens
-import imgEcnpjA3Cartao from "../assets/e-cnpj-a3-cartao-1-ano-barege1-161279485263-removebg-preview.png";
-import imgEcpfA1SemMidia from "../assets/e-cpf-a1-sem-midia-1-ano-barege1-161279647778.png";
-import imgEcpfA3CartaoLeitora from "../assets/e-cpf-a3-cartao-com-leitora-1-ano-certbank-1-161274454851.png";
-import imgEcpfA3Token from "../assets/e-cpf-a3-token-1-ano-certbank-1-161274464487.png";
-import type { MidiaCertificado, Produto, TipoCertificado, TipoVisual, ValidadeCertificado } from "../models/productModel";
+import type {
+  MidiaCertificado,
+  Produto,
+  TipoCertificado,
+  TipoVisual,
+  ValidadeCertificado,
+} from "../models/productModel";
 
 // ============================================================
 // TABELAS DE ESCOLHA
@@ -148,32 +145,38 @@ export const validadesCertificado: ValidadeCertificado[] = [
 
 export const tipoVisualMap: Record<string, TipoVisual> = {
   "A1 - Sem Mídia": {
-    imagem: imgEcpfA1SemMidia,
+    imagem:
+      "https://i.postimg.cc/MK6tK4kw/e-cpf-a1-sem-midia-1-ano-barege1-161279647778.png",
     corBorda: "border-green-400",
     corSombra: "shadow-green-200",
   },
   "A3 - Sem Mídia": {
-    imagem: imgEcpfA1SemMidia,
+    imagem:
+      "https://i.postimg.cc/MK6tK4kw/e-cpf-a1-sem-midia-1-ano-barege1-161279647778.png",
     corBorda: "border-blue-400",
     corSombra: "shadow-blue-200",
   },
   "A3 - Cartão": {
-    imagem: imgEcnpjA3Cartao,
+    imagem:
+      "https://i.postimg.cc/vmJ3YZyz/e-cnpj-a3-cartao-1-ano-barege1-161279485263-removebg-preview.png",
     corBorda: "border-yale-blue",
     corSombra: "shadow-blue-300",
   },
   "A3 - Cartão com Leitora": {
-    imagem: imgEcpfA3CartaoLeitora,
+    imagem:
+      "https://i.postimg.cc/NGC5Psqw/e-cpf-a3-cartao-com-leitora-1-ano-certbank-1-161274454851.png",
     corBorda: "border-purple-400",
     corSombra: "shadow-purple-200",
   },
   "A3 - Token": {
-    imagem: imgEcpfA3Token,
+    imagem:
+      "https://i.postimg.cc/J0mxXYGn/e-cpf-a3-token-1-ano-certbank-1-161274464487.png",
     corBorda: "border-amber-400",
     corSombra: "shadow-amber-200",
   },
   "A3 - Token USB": {
-    imagem: imgEcpfA3Token,
+    imagem:
+      "https://i.postimg.cc/J0mxXYGn/e-cpf-a3-token-1-ano-certbank-1-161274464487.png",
     corBorda: "border-amber-400",
     corSombra: "shadow-amber-200",
   },
@@ -193,7 +196,7 @@ export const produtosDestaque: Produto[] = [
     precoOriginal: 289.0,
     precoDesconto: 245.65,
     desconto: 15,
-    parcelamento: "em até 12x no cartão de crédito",
+
     caracteristicas: [
       "Validade de 1 ano",
       "Mídia criptográfica em cartão",
@@ -211,7 +214,7 @@ export const produtosDestaque: Produto[] = [
     precoOriginal: 155.0,
     precoDesconto: 131.75,
     desconto: 15,
-    parcelamento: "em até 12x no cartão de crédito",
+
     caracteristicas: [
       "Validade de 1 ano",
       "Instalado no computador",
@@ -224,6 +227,79 @@ export const produtosDestaque: Produto[] = [
 
 export const todosProdutos: Produto[] = [
   ...produtosDestaque,
+  // Adicionar ao array todosProdutos:
+
+  // ✅ e-CPF A3 - Sem Mídia - 1 Ano
+  {
+    id: "ecpf-a3-sem-midia-1ano",
+    nome: "e-CPF",
+    tipo: "A3 - Sem Mídia",
+    categoria: "Pessoa Física",
+    duracao: "1 Ano",
+    precoOriginal: 168.0,
+    precoDesconto: 142.8,
+    desconto: 15,
+    caracteristicas: [
+      "Validade de 1 ano",
+      "Armazenamento seguro em nuvem",
+      "Acesso de qualquer dispositivo",
+      "Emissão presencial ou videoconferência",
+    ],
+  },
+
+  // ✅ e-CPF A3 - Sem Mídia - 2 Anos
+  {
+    id: "ecpf-a3-sem-midia-2anos",
+    nome: "e-CPF",
+    tipo: "A3 - Sem Mídia",
+    categoria: "Pessoa Física",
+    duracao: "2 Anos",
+    precoOriginal: 252.0,
+    precoDesconto: 214.2,
+    desconto: 15,
+    caracteristicas: [
+      "Validade de 2 anos",
+      "Armazenamento seguro em nuvem",
+      "Melhor custo-benefício",
+      "Emissão presencial ou videoconferência",
+    ],
+  },
+
+  // ✅ e-CNPJ A3 - Sem Mídia - 1 Ano
+  {
+    id: "ecnpj-a3-sem-midia-1ano",
+    nome: "e-CNPJ",
+    tipo: "A3 - Sem Mídia",
+    categoria: "Pessoa Jurídica",
+    duracao: "1 Ano",
+    precoOriginal: 252.0,
+    precoDesconto: 214.2,
+    desconto: 15,
+    caracteristicas: [
+      "Validade de 1 ano",
+      "Armazenamento seguro em nuvem",
+      "Ideal para empresas",
+      "Emissão presencial ou videoconferência",
+    ],
+  },
+
+  // ✅ e-CNPJ A3 - Sem Mídia - 2 Anos
+  {
+    id: "ecnpj-a3-sem-midia-2anos",
+    nome: "e-CNPJ",
+    tipo: "A3 - Sem Mídia",
+    categoria: "Pessoa Jurídica",
+    duracao: "2 Anos",
+    precoOriginal: 339.0,
+    precoDesconto: 288.15,
+    desconto: 15,
+    caracteristicas: [
+      "Validade de 2 anos",
+      "Armazenamento seguro em nuvem",
+      "Melhor custo-benefício",
+      "Emissão presencial ou videoconferência",
+    ],
+  },
   {
     id: "ecnpj-a3-token",
     nome: "e-CNPJ",
@@ -233,7 +309,7 @@ export const todosProdutos: Produto[] = [
     precoOriginal: 329.0,
     precoDesconto: 279.65,
     desconto: 15,
-    parcelamento: "em até 12x no cartão de crédito",
+
     caracteristicas: [
       "Validade de 1 ano",
       "Token USB incluso",
@@ -250,7 +326,7 @@ export const todosProdutos: Produto[] = [
     precoOriginal: 199.0,
     precoDesconto: 169.15,
     desconto: 15,
-    parcelamento: "em até 12x no cartão de crédito",
+
     caracteristicas: [
       "Validade de 1 ano",
       "Mídia criptográfica em cartão",
@@ -267,7 +343,7 @@ export const todosProdutos: Produto[] = [
     precoOriginal: 239.0,
     precoDesconto: 203.15,
     desconto: 15,
-    parcelamento: "em até 12x no cartão de crédito",
+
     caracteristicas: [
       "Validade de 1 ano",
       "Token USB incluso",
@@ -284,7 +360,7 @@ export const todosProdutos: Produto[] = [
     precoOriginal: 229.0,
     precoDesconto: 194.65,
     desconto: 15,
-    parcelamento: "em até 12x no cartão de crédito",
+
     caracteristicas: [
       "Validade de 1 ano",
       "Instalado no computador",
@@ -301,7 +377,7 @@ export const todosProdutos: Produto[] = [
     precoOriginal: 379.0,
     precoDesconto: 322.15,
     desconto: 15,
-    parcelamento: "em até 12x no cartão de crédito",
+
     caracteristicas: [
       "Validade de 1 ano",
       "Cartão criptográfico + leitora USB",
@@ -318,7 +394,7 @@ export const todosProdutos: Produto[] = [
     precoOriginal: 289.0,
     precoDesconto: 245.65,
     desconto: 15,
-    parcelamento: "em até 12x no cartão de crédito",
+
     caracteristicas: [
       "Validade de 1 ano",
       "Cartão criptográfico + leitora USB",
@@ -335,7 +411,7 @@ export const todosProdutos: Produto[] = [
     precoOriginal: 499.0,
     precoDesconto: 424.15,
     desconto: 15,
-    parcelamento: "em até 12x no cartão de crédito",
+
     caracteristicas: [
       "Validade de 2 anos",
       "Cartão criptográfico + leitora USB",
@@ -352,7 +428,7 @@ export const todosProdutos: Produto[] = [
     precoOriginal: 399.0,
     precoDesconto: 339.15,
     desconto: 15,
-    parcelamento: "em até 12x no cartão de crédito",
+
     caracteristicas: [
       "Validade de 2 anos",
       "Cartão criptográfico + leitora USB",
@@ -369,7 +445,7 @@ export const todosProdutos: Produto[] = [
     precoOriginal: 399.0,
     precoDesconto: 339.15,
     desconto: 15,
-    parcelamento: "em até 12x no cartão de crédito",
+
     caracteristicas: [
       "Validade de 2 anos",
       "Mídia criptográfica em cartão",
@@ -386,7 +462,7 @@ export const todosProdutos: Produto[] = [
     precoOriginal: 299.0,
     precoDesconto: 254.15,
     desconto: 15,
-    parcelamento: "em até 12x no cartão de crédito",
+
     caracteristicas: [
       "Validade de 2 anos",
       "Mídia criptográfica em cartão",
@@ -395,4 +471,3 @@ export const todosProdutos: Produto[] = [
     ],
   },
 ];
-

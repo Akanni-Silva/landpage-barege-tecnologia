@@ -14,11 +14,10 @@ export function ProductCard({ produto }: ProductCardProps) {
   const visual = getVisualPorTipo(produto.tipo);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Dados para o modal
   const dadosModal = visual
     ? {
         titulo: `${produto.nome} - ${produto.tipo}`,
-        descricao: `Certificado digital ${produto.nome} no formato ${produto.tipo} com validade de ${produto.duracao}. ${produto.categoria}.`,
+        descricao: `Certificado digital ${produto.nome} • ${produto.tipo} • ${produto.duracao}`,
         beneficios: produto.caracteristicas,
         imagem: visual.imagem,
         corBorda: visual.corBorda,
@@ -40,7 +39,7 @@ export function ProductCard({ produto }: ProductCardProps) {
         )}
 
         <div className="text-center mb-4 mt-2">
-          {/* Imagem do produto com botão de info sobreposto */}
+          {/* Imagem do produto */}
           <div className="relative flex justify-center mb-3">
             {visual ? (
               <div
@@ -48,7 +47,7 @@ export function ProductCard({ produto }: ProductCardProps) {
                   relative w-20 h-20 rounded-full 
                   border-2 ${visual.corBorda} ${visual.corSombra}
                   shadow-md
-                  bg-gradient-to-br from-bright-snow to-white
+                  bg-linear-to-br from-bright-snow to-white
                   flex items-center justify-center
                   overflow-hidden
                   transition-transform duration-300 hover:scale-110
@@ -63,24 +62,11 @@ export function ProductCard({ produto }: ProductCardProps) {
             ) : (
               <div className="relative w-20 h-20 rounded-full bg-baby-blue-ice flex items-center justify-center">
                 <BadgeCheck className="w-10 h-10 text-yale-blue" />
-
-                {/* ✅ Botão de info também no fallback */}
-                <button
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    setIsModalOpen(true);
-                  }}
-                  className="absolute -bottom-1 -right-1 w-7 h-7 bg-yale-blue text-white rounded-full flex items-center justify-center shadow-md hover:bg-rich-cerulean transition transform hover:scale-110"
-                  title="Saiba mais sobre este produto"
-                >
-                  <Info className="w-3.5 h-3.5" />
-                </button>
               </div>
             )}
           </div>
 
-          {/* ✅ Botão "Saiba mais" abaixo da imagem */}
+          {/* Botão Saiba mais */}
           <button
             onClick={(e) => {
               e.preventDefault();
@@ -90,7 +76,7 @@ export function ProductCard({ produto }: ProductCardProps) {
             className="inline-flex items-center gap-1 text-xs text-rich-cerulean hover:text-yale-blue transition font-medium mb-1"
           >
             <Info className="w-3 h-3" />
-            Saiba mais sobre este produto
+            Saiba mais
           </button>
 
           <h3 className="text-xl font-bold text-yale-blue">{produto.nome}</h3>
@@ -106,20 +92,14 @@ export function ProductCard({ produto }: ProductCardProps) {
         </div>
 
         <div className="text-center mb-4">
-          <p className="text-sm text-gray-400 line-through">
+          <p className="text-3xl font-bold text-yale-blue">
             {formatPrice(produto.precoOriginal)}
           </p>
-          <p className="text-3xl font-bold text-yale-blue">
-            {formatPrice(produto.precoDesconto)}
-          </p>
-          <span className="inline-block bg-green-100 text-green-700 text-xs font-semibold px-2 py-1 rounded-full mt-1">
-            {produto.desconto}% OFF
-          </span>
-          <p className="text-xs text-gray-400 mt-1">{produto.parcelamento}</p>
+          <p className="text-xs text-gray-400 mt-1">Pix, cartão ou à vista</p>
         </div>
 
         <ul className="space-y-2 mb-6 text-sm">
-          {produto.caracteristicas.slice(0, 4).map((feature, index) => (
+          {produto.caracteristicas.slice(0, 3).map((feature, index) => (
             <li key={index} className="flex items-start gap-2">
               <BadgeCheck className="w-4 h-4 text-rich-cerulean mt-0.5 shrink-0" />
               <span className="text-gray-600">{feature}</span>
@@ -135,7 +115,6 @@ export function ProductCard({ produto }: ProductCardProps) {
         </Link>
       </div>
 
-      {/* ✅ Modal renderizado FORA do card, no nível correto */}
       <ProductModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}

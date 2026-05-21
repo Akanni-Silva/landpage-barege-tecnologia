@@ -5,7 +5,7 @@ function ComoFunciona() {
     {
       icon: CreditCard,
       title: "1. Escolha e Pague",
-      desc: "Adquira seu certificado com até 15% de desconto, em até 12x no cartão ou boleto.",
+      desc: "Escolha seu certificado e pague via Pix, cartão ou à vista.",
     },
     {
       icon: Calendar,
@@ -15,12 +15,12 @@ function ComoFunciona() {
     {
       icon: UserCheck,
       title: "3. Documentos",
-      desc: "Tenha em mãos os documentos necessários.",
+      desc: "Separe seus documentos.",
     },
     {
       icon: Video,
       title: "4. Emita",
-      desc: "Realize a emissão com segurança.",
+      desc: "Pronto! Seu certificado emitido.",
     },
   ];
 
@@ -32,7 +32,7 @@ function ComoFunciona() {
             Como Funciona
           </h1>
           <p className="text-xl text-baby-blue-ice">
-            Adquira seu Certificado Digital de forma rápida e segura
+            4 passos simples. Zero burocracia.
           </p>
         </div>
       </section>

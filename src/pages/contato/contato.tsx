@@ -5,15 +5,14 @@ import {
   Mail,
   Clock,
   MessageCircle,
-  Building,
   Shield,
-  ExternalLink,
   Globe,
 } from "lucide-react";
 import { companyInfo } from "../../data";
 import { InstagramLogoIcon } from "@phosphor-icons/react";
 import { Link } from "react-router-dom";
-import baregeLogo from "../../assets/baregeLogo.png";
+
+const baregeLogo = "https://i.postimg.cc/cCZh3krn/barege-Logo.png";
 
 function Contato() {
   return (
@@ -22,57 +21,57 @@ function Contato() {
       <section className="bg-linear-to-br from-yale-blue to-rich-cerulean py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl font-extrabold text-white mb-4">
-            Entre em Contato
+            Fale com a Barege
           </h1>
           <p className="text-xl text-baby-blue-ice">
-            Estamos prontos para atender você
+            Atendimento rápido e sem burocracia
           </p>
         </div>
       </section>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid lg:grid-cols-3 gap-8">
-          {/* Coluna principal - Informações de contato */}
+          {/* Coluna principal */}
           <div className="lg:col-span-2 space-y-6">
-            {/* Cartão de Visitas Digital */}
+            {/* Cartão de Visitas */}
             <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
               <div className="flex items-center gap-4 mb-6">
                 <img
                   src={baregeLogo}
-                  alt="logo da barege tecnologia"
-                  className="h-17 w-auto"
+                  alt="Barege Tecnologia"
+                  className="h-16 w-auto"
                 />
                 <div>
                   <h2 className="text-2xl font-bold text-yale-blue">
                     {companyInfo.name}
                   </h2>
-                  <p className="text-gray-500">
-                    Tecnologia e Confiança em Certificação Digital
+                  <p className="text-gray-500 text-sm">
+                    Especialistas em certificação digital
                   </p>
                 </div>
               </div>
 
-              <div className="grid sm:grid-cols-2 gap-6">
+              <div className="grid sm:grid-cols-2 gap-4">
                 {/* Endereço */}
                 <div className="flex items-start gap-3 p-4 bg-bright-snow rounded-xl">
-                  <MapPin className="w-6 h-6 text-rich-cerulean shrink-0 mt-1" />
+                  <MapPin className="w-5 h-5 text-rich-cerulean shrink-0 mt-0.5" />
                   <div>
-                    <h3 className="font-semibold text-yale-blue mb-1">
+                    <h3 className="font-semibold text-yale-blue text-sm mb-1">
                       Endereço
                     </h3>
                     <p className="text-gray-600 text-sm">
                       {companyInfo.address}
                     </p>
-                    <p className="text-gray-400 text-xs mt-1">Osasco - SP</p>
+                    <p className="text-gray-400 text-xs mt-1">Osasco — SP</p>
                   </div>
                 </div>
 
-                {/* Telefone */}
+                {/* WhatsApp */}
                 <div className="flex items-start gap-3 p-4 bg-bright-snow rounded-xl">
-                  <Phone className="w-6 h-6 text-rich-cerulean shrink-0 mt-1" />
+                  <Phone className="w-5 h-5 text-rich-cerulean shrink-0 mt-0.5" />
                   <div>
-                    <h3 className="font-semibold text-yale-blue mb-1">
-                      Telefone / WhatsApp
+                    <h3 className="font-semibold text-yale-blue text-sm mb-1">
+                      WhatsApp
                     </h3>
                     <a
                       href={companyInfo.whatsappLink}
@@ -82,17 +81,14 @@ function Contato() {
                     >
                       (11) 99860-6204
                     </a>
-                    <p className="text-gray-400 text-xs mt-1">
-                      Atendimento via WhatsApp
-                    </p>
                   </div>
                 </div>
 
                 {/* E-mail */}
                 <div className="flex items-start gap-3 p-4 bg-bright-snow rounded-xl">
-                  <Mail className="w-6 h-6 text-rich-cerulean shrink-0 mt-1" />
+                  <Mail className="w-5 h-5 text-rich-cerulean shrink-0 mt-0.5" />
                   <div>
-                    <h3 className="font-semibold text-yale-blue mb-1">
+                    <h3 className="font-semibold text-yale-blue text-sm mb-1">
                       E-mail
                     </h3>
                     <a
@@ -104,15 +100,17 @@ function Contato() {
                   </div>
                 </div>
 
-                {/* Horário de Atendimento */}
+                {/* Horário */}
                 <div className="flex items-start gap-3 p-4 bg-bright-snow rounded-xl">
-                  <Clock className="w-6 h-6 text-rich-cerulean shrink-0 mt-1" />
+                  <Clock className="w-5 h-5 text-rich-cerulean shrink-0 mt-0.5" />
                   <div>
-                    <h3 className="font-semibold text-yale-blue mb-1">
-                      Horário de Atendimento
+                    <h3 className="font-semibold text-yale-blue text-sm mb-1">
+                      Horário
                     </h3>
-                    <p className="text-gray-600 text-sm">Segunda a Sexta</p>
-                    <p className="text-gray-600 text-sm">09:00 às 18:00</p>
+                    <p className="text-gray-600 text-sm">Seg a Sex: 09h às 18h</p>
+                    <p className="text-gray-500 text-xs mt-0.5">
+                      Sábado: 09h às 13h
+                    </p>
                   </div>
                 </div>
               </div>
@@ -126,7 +124,7 @@ function Contato() {
                   className="flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded-full hover:bg-green-600 transition text-sm font-medium"
                 >
                   <MessageCircle className="w-4 h-4" />
-                  WhatsApp
+                  Chamar no WhatsApp
                 </a>
                 <a
                   href={`https://instagram.com/${companyInfo.instagram.replace("@", "")}`}
@@ -140,71 +138,42 @@ function Contato() {
               </div>
             </div>
 
-            {/* Mapa */}
+            {/* Sobre a Barege */}
             <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
-              <h2 className="text-xl font-bold text-yale-blue mb-4 flex items-center gap-2">
-                <MapPin className="w-5 h-5" />
-                Nossa Localização
+              <h2 className="text-xl font-bold text-yale-blue mb-4">
+                Por que escolher a Barege?
               </h2>
-              <div className="aspect-video bg-bright-snow rounded-xl overflow-hidden">
-                <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3658.122857672406!2d-46.79169468440715!3d-23.52858468470034!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ceff095c5e5b8d%3A0x9e4e4e4e4e4e4e4e!2sAv.%20dos%20Autonomistas%2C%202561%20-%20Vila%20Osasco%2C%20Osasco%20-%20SP!5e0!3m2!1spt-BR!2sbr!4v1625000000000!5m2!1spt-BR!2sbr"
-                  width="100%"
-                  height="100%"
-                  style={{ border: 0, minHeight: "300px" }}
-                  allowFullScreen
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                  title="Localização Barege Tecnologia"
-                />
-              </div>
-              <p className="text-xs text-gray-400 mt-2 text-center">
-                Av. dos Autonomistas, 2561 - Osasco - SP
-              </p>
-            </div>
-
-            {/* Informações Complementares */}
-            <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
-              <h2 className="text-xl font-bold text-yale-blue mb-4 flex items-center gap-2">
-                <Building className="w-5 h-5" />
-                Informações Complementares
-              </h2>
-              <div className="space-y-4 text-gray-600">
+              <div className="space-y-4">
                 <div className="flex items-start gap-3 p-4 bg-bright-snow rounded-xl">
                   <Shield className="w-5 h-5 text-rich-cerulean shrink-0 mt-0.5" />
                   <div>
-                    <h3 className="font-semibold text-yale-blue">
-                      Certificação Digital
+                    <h3 className="font-semibold text-yale-blue text-sm">
+                      Certificação digital completa
                     </h3>
-                    <p className="text-sm mt-1">
-                      Trabalhamos com todos os tipos de certificados digitais:
-                      e-CPF, e-CNPJ, NFe, CT-e, e-Jurídico, e-Médico, e-Saúde e
-                      outros. Emissão rápida e sem burocracia, com suporte
-                      completo.
+                    <p className="text-gray-500 text-sm mt-1">
+                      e-CPF, e-CNPJ, NFe, CT-e, e-Jurídico, e-Médico, e-Saúde.
                     </p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3 p-4 bg-bright-snow rounded-xl">
                   <Globe className="w-5 h-5 text-rich-cerulean shrink-0 mt-0.5" />
                   <div>
-                    <h3 className="font-semibold text-yale-blue">
-                      Atendimento Nacional
+                    <h3 className="font-semibold text-yale-blue text-sm">
+                      Atendimento em todo Brasil
                     </h3>
-                    <p className="text-sm mt-1">
-                      Atendemos em todo o Brasil com emissão presencial em nossa
-                      unidade em Osasco - SP ou por videoconferência para
-                      qualquer localidade.
+                    <p className="text-gray-500 text-sm mt-1">
+                      Presencial em Osasco/SP ou online por videoconferência.
                     </p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3 p-4 bg-bright-snow rounded-xl">
-                  <ExternalLink className="w-5 h-5 text-rich-cerulean shrink-0 mt-0.5" />
+                  <MessageCircle className="w-5 h-5 text-green-500 shrink-0 mt-0.5" />
                   <div>
-                    <h3 className="font-semibold text-yale-blue">Parcerias</h3>
-                    <p className="text-sm mt-1">
-                      Contadores e escritórios de contabilidade podem se tornar
-                      parceiros e ganhar comissão por cada certificado emitido e
-                      renovado de seus clientes.
+                    <h3 className="font-semibold text-yale-blue text-sm">
+                      Suporte via WhatsApp
+                    </h3>
+                    <p className="text-gray-500 text-sm mt-1">
+                      Atendimento rápido de Seg a Sex: 09h às 18h.
                     </p>
                   </div>
                 </div>
@@ -212,16 +181,16 @@ function Contato() {
             </div>
           </div>
 
-          {/* Coluna lateral - WhatsApp CTA */}
+          {/* Coluna lateral */}
           <div className="space-y-6">
-            <div className="bg-green-50 rounded-2xl shadow-lg p-6 border border-green-200 text-center sticky top-24">
+            {/* CTA WhatsApp */}
+            <div className="bg-green-50 rounded-2xl shadow-lg p-6 border border-green-200 text-center top-24">
               <MessageCircle className="w-12 h-12 text-green-500 mx-auto mb-4" />
               <h3 className="text-xl font-bold text-green-800 mb-2">
-                Fale Conosco pelo WhatsApp
+                Fale com a gente agora
               </h3>
               <p className="text-sm text-green-600 mb-6">
-                Atendimento rápido e personalizado. Tire suas dúvidas ou
-                solicite seu certificado agora mesmo.
+                Tire suas dúvidas ou solicite seu certificado
               </p>
               <a
                 href={companyInfo.whatsappLink}
@@ -235,14 +204,14 @@ function Contato() {
                 </span>
               </a>
               <p className="text-xs text-green-500 mt-3">
-                Seg a Sex: 09:00 às 18:00
+                Seg a Sex: 09h às 18h
               </p>
             </div>
 
             {/* Links rápidos */}
             <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
               <h3 className="text-lg font-bold text-yale-blue mb-4">
-                Links Rápidos
+                Acesso Rápido
               </h3>
               <div className="space-y-2">
                 <Link
