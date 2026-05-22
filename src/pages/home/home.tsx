@@ -34,17 +34,17 @@ function Home() {
   const banners = [
     {
       id: 1,
-      image: "https://i.postimg.cc/c6byTKKn/banner-1-hero-barege.png",
+      image: "https://i.postimg.cc/WFb3Hrtm/banner-1-hero-barege.png",
       alt: "Certificado Digital Rápido e Seguro | Barege",
     },
     {
       id: 2,
-      image: "https://i.postimg.cc/Z0Mtj99y/banner-2-produtos-barege.png",
+      image: "https://i.postimg.cc/PprxRZNL/banner-2-produtos-barege.png",
       alt: "Compre seu Certificado Digital Online | Barege",
     },
     {
       id: 3,
-      image: "https://i.postimg.cc/4nSkwKKK/banner-3-sobre-barege.png",
+      image: "https://i.postimg.cc/MMKTFRXy/banner-3-sobre-barege.png",
       alt: "Especialistas em Certificação Digital | Barege",
     },
   ];
