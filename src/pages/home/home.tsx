@@ -34,17 +34,17 @@ function Home() {
   const banners = [
     {
       id: 1,
-      image: "https://i.postimg.cc/WFb3Hrtm/banner-1-hero-barege.png",
+      image: "/src/assets/banner-1-hero-barege.png",
       alt: "Certificado Digital Rápido e Seguro | Barege",
     },
     {
       id: 2,
-      image: "https://i.postimg.cc/PprxRZNL/banner-2-produtos-barege.png",
+      image: "/src/assets/banner-2-produtos-barege.png",
       alt: "Compre seu Certificado Digital Online | Barege",
     },
     {
       id: 3,
-      image: "https://i.postimg.cc/MMKTFRXy/banner-3-sobre-barege.png",
+      image: "/src/assets/banner-3-sobre-barege.png",
       alt: "Especialistas em Certificação Digital | Barege",
     },
   ];
@@ -133,9 +133,7 @@ function Home() {
           <h1 className="text-3xl sm:text-4xl font-extrabold text-white mb-4">
             Certificado Digital Rápido e Sem Burocracia
           </h1>
-          <p className="text-lg text-baby-blue-ice mb-8">
-            +5.000 clientes
-          </p>
+          <p className="text-lg text-baby-blue-ice mb-8">+5.000 clientes</p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <Link
               to="/solicitacao"
