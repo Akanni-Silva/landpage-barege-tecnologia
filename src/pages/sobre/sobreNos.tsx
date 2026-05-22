@@ -14,7 +14,7 @@ import { companyInfo } from "../../data";
 import DepoimentoCard from "../../components/cards/depoimentosCard";
 import { depoimentosData } from "../../data/depoimentoData";
 
-const baregeLogo = "https://i.postimg.cc/cCZh3krn/barege-Logo.png";
+const baregeLogo = "https://i.postimg.cc/C1t1Zt1y/barege-Logo.png";
 
 function SobreNos() {
   const diferenciais = [
@@ -60,9 +60,8 @@ function SobreNos() {
 
   const numeros = [
     { valor: "+5.000", label: "Emitidos" },
-    { valor: "+500", label: "Clientes" },
+    // { valor: "+500", label: "Clientes" },
     { valor: "98%", label: "Satisfação" },
-    { valor: "24/7", label: "Suporte" },
   ];
 
   return (
@@ -119,7 +118,7 @@ function SobreNos() {
               </div>
               <div className="absolute -bottom-4 -right-4 bg-yale-blue text-white rounded-2xl p-6 shadow-xl">
                 <p className="text-3xl font-bold">+5.000</p>
-                <p className="text-sm text-baby-blue-ice">Emitidos</p>
+                
               </div>
             </div>
           </div>
@@ -129,7 +128,7 @@ function SobreNos() {
       {/* Números */}
       <section className="py-16 bg-bright-snow-2">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {numeros.map((item, index) => (
               <div key={index} className="text-center">
                 <p className="text-4xl font-extrabold text-yale-blue">

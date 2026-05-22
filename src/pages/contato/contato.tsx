@@ -12,7 +12,7 @@ import { companyInfo } from "../../data";
 import { InstagramLogoIcon } from "@phosphor-icons/react";
 import { Link } from "react-router-dom";
 
-const baregeLogo = "https://i.postimg.cc/cCZh3krn/barege-Logo.png";
+const baregeLogo = "https://i.postimg.cc/C1t1Zt1y/barege-Logo.png";
 
 function Contato() {
   return (

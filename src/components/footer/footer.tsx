@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Percent } from "lucide-react";
 import { companyInfo } from "../../data/companyData";
-const baregeLogo = "https://i.postimg.cc/cCZh3krn/barege-Logo.png";
+const baregeLogo = "https://i.postimg.cc/C1t1Zt1y/barege-Logo.png";
 
 function Footer() {
   return (

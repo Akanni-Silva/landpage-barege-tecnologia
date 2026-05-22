@@ -34,17 +34,17 @@ function Home() {
   const banners = [
     {
       id: 1,
-      image: "https://i.postimg.cc/W4F5cJBw/banner-1-hero-barege.png",
+      image: "https://i.postimg.cc/c6byTKKn/banner-1-hero-barege.png",
       alt: "Certificado Digital Rápido e Seguro | Barege",
     },
     {
       id: 2,
-      image: "https://i.postimg.cc/rp0f2tBt/banner-2-produtos-barege.png",
+      image: "https://i.postimg.cc/Z0Mtj99y/banner-2-produtos-barege.png",
       alt: "Compre seu Certificado Digital Online | Barege",
     },
     {
       id: 3,
-      image: "https://i.postimg.cc/LsYxFZcP/banner-3-sobre-barege.png",
+      image: "https://i.postimg.cc/4nSkwKKK/banner-3-sobre-barege.png",
       alt: "Especialistas em Certificação Digital | Barege",
     },
   ];
@@ -79,7 +79,7 @@ function Home() {
 
   const categorias = [
     { icon: CreditCard, nome: "e-CPF", desc: "Pessoa Física" },
-    { icon: Building, nome: "e-CNPJ", desc: "Pessoa Jurídica" },
+    { icon: Building, nome: "e-CNPJ / MEI", desc: "Pessoa Jurídica" },
     { icon: FileText, nome: "NFe / NFCe", desc: "Nota Fiscal" },
     { icon: FileText, nome: "CT-e", desc: "Transporte" },
     { icon: Shield, nome: "e-Jurídico", desc: "Advocacia" },
@@ -134,21 +134,21 @@ function Home() {
             Certificado Digital Rápido e Sem Burocracia
           </h1>
           <p className="text-lg text-baby-blue-ice mb-8">
-            +5.000 clientes já confiam na Barege
+            +5.000 clientes
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <Link
               to="/solicitacao"
               className="px-8 py-4 bg-white text-yale-blue font-semibold rounded-full hover:bg-bright-snow transition shadow-lg"
             >
-              Peça o seu agora
+              Qual o seu certificado ?
             </Link>
-            <Link
+            {/* <Link
               to="/produtos"
               className="px-8 py-4 border-2 border-white text-white font-semibold rounded-full hover:bg-white/10 transition"
             >
               Qual o seu certificado ?
-            </Link>
+            </Link> */}
           </div>
         </div>
       </section>
@@ -204,13 +204,13 @@ function Home() {
               to="/solicitacao"
               className="w-full sm:w-auto px-8 py-3 bg-white text-yale-blue font-semibold rounded-full hover:bg-bright-snow transition shadow-lg text-center flex items-center justify-center gap-2"
             >
-              Peça o seu agora <ChevronRight className="w-4 h-4" />
+              Peça o seu agora
             </Link>
             <Link
               to="/produtos"
               className="w-full sm:w-auto px-8 py-3 border-2 border-white text-white font-semibold rounded-full hover:bg-white/10 transition text-center"
             >
-              Qual o seu certificado ?
+              Ver Produtos
             </Link>
           </div>
         </div>
