@@ -21,6 +21,10 @@ import {
 } from "lucide-react";
 import { formatPrice } from "../../utils/formatPrice";
 
+import bannerHero from "../../assets/banner-1-hero-barege.png";
+import bannerProdutos from "../../assets/banner-2-produtos-barege.png";
+import bannerSobre from "../../assets/banner-3-sobre-barege.png";
+
 import { companyInfo, produtosDestaque } from "../../data";
 import { ProductModal } from "../../components/modals/productModal";
 import type { DadosModalProduto, Produto } from "../../models/productModel";
@@ -34,17 +38,17 @@ function Home() {
   const banners = [
     {
       id: 1,
-      image: "/src/assets/banner-1-hero-barege.png",
+      image: bannerHero,
       alt: "Certificado Digital Rápido e Seguro | Barege",
     },
     {
       id: 2,
-      image: "/src/assets/banner-2-produtos-barege.png",
+      image: bannerProdutos,
       alt: "Compre seu Certificado Digital Online | Barege",
     },
     {
       id: 3,
-      image: "/src/assets/banner-3-sobre-barege.png",
+      image: bannerSobre,
       alt: "Especialistas em Certificação Digital | Barege",
     },
   ];
