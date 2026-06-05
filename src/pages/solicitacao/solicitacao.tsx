@@ -174,7 +174,7 @@ function Solicitacao() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // ✅ Novos estados para endereço
+  // ✅ Estados para endereço
   const [cep, setCep] = useState("");
   const [rua, setRua] = useState("");
   const [numero, setNumero] = useState("");
@@ -315,6 +315,11 @@ function Solicitacao() {
     }
 
     // ============================================================
+    // MONTAR ENDEREÇO COMPLETO
+    // ============================================================
+    const enderecoCompleto = `${ruaValue}, ${numeroValue}${complementoValue ? ` - ${complementoValue}` : ""} - ${bairroValue} - CEP: ${cepValue}`;
+
+    // ============================================================
     // PREPARAR CAMPOS HIDDEN
     // ============================================================
     const camposRemover = [
@@ -327,22 +332,18 @@ function Solicitacao() {
       if (old) old.remove();
     });
 
-    // Campo tipo-certificado
     const inputTipo = document.createElement("input");
     inputTipo.type = "hidden";
     inputTipo.name = "tipo-certificado";
     inputTipo.value = `${tipo?.nome || ""} - ${midia?.nome || ""} - ${validade?.nome || ""} - Total: ${formatPrice(precoFinal)}`;
     form.current.appendChild(inputTipo);
 
-    // Campo data_envio
     const inputData = document.createElement("input");
     inputData.type = "hidden";
     inputData.name = "data_envio";
     inputData.value = new Date().toLocaleDateString("pt-BR");
     form.current.appendChild(inputData);
 
-    // ✅ Campo endereço completo
-    const enderecoCompleto = `${ruaValue}, ${numeroValue}${complementoValue ? ` - ${complementoValue}` : ""} - ${bairroValue} - CEP: ${cepValue}`;
     const inputEndereco = document.createElement("input");
     inputEndereco.type = "hidden";
     inputEndereco.name = "endereco_completo";
@@ -356,8 +357,10 @@ function Solicitacao() {
     setIsSubmitting(true);
 
     try {
+      // ✅ 1. Enviar e-mail para a Barege
       await enviarEmailBarege(form.current);
 
+      // ✅ 2. Enviar e-mail de confirmação para o CLIENTE (com endereço)
       await enviarEmailConfirmacaoCliente({
         nome,
         email,
@@ -368,8 +371,10 @@ function Solicitacao() {
         validade: validade?.nome || "—",
         preco: formatPrice(precoFinal),
         dataEnvio: new Date().toLocaleDateString("pt-BR"),
+        endereco: enderecoCompleto,
       });
 
+      // ✅ 3. Abrir WhatsApp em segunda aba (com endereço)
       const mensagemWpp = montarMensagemWhatsApp({
         nome,
         email,
@@ -379,6 +384,7 @@ function Solicitacao() {
         midia: midia?.nome || "—",
         validade: validade?.nome || "—",
         preco: formatPrice(precoFinal),
+        endereco: enderecoCompleto,
       });
       abrirWhatsApp(mensagemWpp);
 
@@ -684,7 +690,7 @@ function Solicitacao() {
                       )}
                     </div>
 
-                    {/* E-mail e WhatsApp */}
+                    {/* E-mail e WhatsApp lado a lado */}
                     <div className="grid sm:grid-cols-2 gap-4">
                       <div>
                         <label className="block text-sm font-semibold text-yale-blue mb-1">
@@ -771,7 +777,7 @@ function Solicitacao() {
                     {/* ✅ Endereço */}
                     <div className="bg-bright-snow rounded-xl p-4">
                       <h3 className="text-sm font-semibold text-yale-blue mb-3">
-                        📍 Endereço de Cobrança
+                        Endereço de Cobrança
                       </h3>
 
                       {/* CEP */}

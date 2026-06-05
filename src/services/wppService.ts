@@ -1,3 +1,5 @@
+// src/services/wppService.ts
+
 // ============================================================
 // CONFIGURAÇÃO
 // ============================================================
@@ -15,27 +17,21 @@ export interface DadosWhatsApp {
   midia: string;
   validade: string;
   preco: string;
-  endereco?: string;
+  endereco: string; 
 }
 
 // ============================================================
 // MONTAR MENSAGEM PARA WHATSAPP (enviada pelo próprio cliente)
 // ============================================================
 export const montarMensagemWhatsApp = (dados: DadosWhatsApp): string => {
-  let mensagem =
+  const mensagem =
     `Ola! Gostaria de solicitar meu Certificado Digital.%0A%0A` +
     `*Meus dados:*%0A` +
     `Nome: ${dados.nome}%0A` +
     `E-mail: ${dados.email}%0A` +
     `WhatsApp: ${dados.whatsapp}%0A` +
-    `Documento: ${dados.documento}%0A`;
-
-  // Endereço (se fornecido)
-  if (dados.endereco) {
-    mensagem += `Endereco: ${dados.endereco}%0A`;
-  }
-
-  mensagem +=
+    `Documento: ${dados.documento}%0A` +
+    `Endereco: ${dados.endereco}%0A` + // ✅ Sempre exibido
     `%0A` +
     `*Produto escolhido:*%0A` +
     `Tipo: ${dados.tipo}%0A` +

@@ -30,8 +30,6 @@ export interface DadosSolicitacao {
 export const enviarEmailBarege = async (
   form: HTMLFormElement,
 ): Promise<void> => {
-  // ✅ O campo endereco_completo já é adicionado como hidden no form
-  // antes de chamar esta função, então ele será enviado automaticamente
   await sendForm(
     EMAILJS_SERVICE_ID,
     EMAILJS_TEMPLATE_SOLICITACAO,
