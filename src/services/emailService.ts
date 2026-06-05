@@ -1,4 +1,3 @@
-// src/services/emailService.ts
 import { sendForm, send } from "@emailjs/browser";
 
 // ============================================================
@@ -22,6 +21,7 @@ export interface DadosSolicitacao {
   validade: string;
   preco: string;
   dataEnvio: string;
+  endereco?: string; // ✅ Novo campo — endereço completo do cliente
 }
 
 // ============================================================
@@ -30,6 +30,8 @@ export interface DadosSolicitacao {
 export const enviarEmailBarege = async (
   form: HTMLFormElement,
 ): Promise<void> => {
+  // ✅ O campo endereco_completo já é adicionado como hidden no form
+  // antes de chamar esta função, então ele será enviado automaticamente
   await sendForm(
     EMAILJS_SERVICE_ID,
     EMAILJS_TEMPLATE_SOLICITACAO,
@@ -55,6 +57,7 @@ export const enviarEmailConfirmacaoCliente = async (
       validade: dados.validade,
       preco: dados.preco,
       data_envio: dados.dataEnvio,
+      endereco_completo: dados.endereco || "—", // ✅ Novo campo
     },
     EMAILJS_PUBLIC_KEY,
   );

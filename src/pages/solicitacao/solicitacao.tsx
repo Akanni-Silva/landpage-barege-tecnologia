@@ -22,7 +22,13 @@ import {
   Clock,
   Info,
 } from "lucide-react";
-import { formatPrice, validarDocumento, validarTelefone } from "../../utils";
+import {
+  formatPrice,
+  validarDocumento,
+  validarTelefone,
+  validarCEP,
+  formatarCEP,
+} from "../../utils";
 import { ProductModal } from "../../components/modals/productModal";
 import { getMidiaPorId, getVisualPorTipo } from "../../services/productService";
 import {
@@ -41,6 +47,7 @@ import {
   abrirWhatsApp,
   montarMensagemWhatsApp,
 } from "../../services/wppService";
+import { buscarEnderecoPorCEP } from "../../services/cepService";
 
 // ============================================================
 // MAPEAMENTO DE ÍCONES
@@ -167,6 +174,14 @@ function Solicitacao() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  // ✅ Novos estados para endereço
+  const [cep, setCep] = useState("");
+  const [rua, setRua] = useState("");
+  const [numero, setNumero] = useState("");
+  const [bairro, setBairro] = useState("");
+  const [complemento, setComplemento] = useState("");
+  const [buscandoCEP, setBuscandoCEP] = useState(false);
+
   // ============================================================
   // DADOS DERIVADOS
   // ============================================================
@@ -202,6 +217,27 @@ function Solicitacao() {
   })();
 
   // ============================================================
+  // BUSCA DE CEP
+  // ============================================================
+  const handleBuscarCEP = async (cepValue: string) => {
+    const cepFormatado = formatarCEP(cepValue);
+    setCep(cepFormatado);
+    setErrors((prev) => ({ ...prev, cep: "" }));
+
+    const cepLimpo = cepValue.replace(/[^\d]/g, "");
+    if (cepLimpo.length === 8) {
+      setBuscandoCEP(true);
+      const endereco = await buscarEnderecoPorCEP(cepValue);
+      if (endereco) {
+        setRua(endereco.logradouro);
+        setBairro(endereco.bairro);
+        setErrors((prev) => ({ ...prev, rua: "", bairro: "" }));
+      }
+      setBuscandoCEP(false);
+    }
+  };
+
+  // ============================================================
   // HELPERS DE RENDERIZAÇÃO
   // ============================================================
   const renderIcon = (
@@ -225,6 +261,12 @@ function Solicitacao() {
     const email = formData.get("email")?.toString().trim() || "";
     const whatsapp = formData.get("whatsapp")?.toString().trim() || "";
     const documento = formData.get("documento")?.toString().trim() || "";
+    const cepValue = formData.get("cep")?.toString().trim() || "";
+    const ruaValue = formData.get("rua")?.toString().trim() || "";
+    const numeroValue = formData.get("numero")?.toString().trim() || "";
+    const bairroValue = formData.get("bairro")?.toString().trim() || "";
+    const complementoValue =
+      formData.get("complemento")?.toString().trim() || "";
 
     // ============================================================
     // VALIDAÇÃO
@@ -253,32 +295,59 @@ function Solicitacao() {
       newErrors.documento = getMensagemErroTipo(tipoEscolhido);
     }
 
+    // ✅ Validação dos campos de endereço
+    if (!cepValue || !validarCEP(cepValue)) {
+      newErrors.cep = "CEP inválido. Use o formato 00000-000";
+    }
+    if (!ruaValue) {
+      newErrors.rua = "Rua é obrigatória";
+    }
+    if (!numeroValue) {
+      newErrors.numero = "Número é obrigatório";
+    }
+    if (!bairroValue) {
+      newErrors.bairro = "Bairro é obrigatório";
+    }
+
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
 
     // ============================================================
-    // PREPARAR CAMPOS HIDDEN (PARA EMAIL DA BAREGE)
+    // PREPARAR CAMPOS HIDDEN
     // ============================================================
-    const oldTipo = form.current.querySelector(
-      'input[name="tipo-certificado"]',
-    );
-    const oldData = form.current.querySelector('input[name="data_envio"]');
-    if (oldTipo) oldTipo.remove();
-    if (oldData) oldData.remove();
+    const camposRemover = [
+      "tipo-certificado",
+      "data_envio",
+      "endereco_completo",
+    ];
+    camposRemover.forEach((name) => {
+      const old = form.current!.querySelector(`input[name="${name}"]`);
+      if (old) old.remove();
+    });
 
+    // Campo tipo-certificado
     const inputTipo = document.createElement("input");
     inputTipo.type = "hidden";
     inputTipo.name = "tipo-certificado";
     inputTipo.value = `${tipo?.nome || ""} - ${midia?.nome || ""} - ${validade?.nome || ""} - Total: ${formatPrice(precoFinal)}`;
     form.current.appendChild(inputTipo);
 
+    // Campo data_envio
     const inputData = document.createElement("input");
     inputData.type = "hidden";
     inputData.name = "data_envio";
     inputData.value = new Date().toLocaleDateString("pt-BR");
     form.current.appendChild(inputData);
+
+    // ✅ Campo endereço completo
+    const enderecoCompleto = `${ruaValue}, ${numeroValue}${complementoValue ? ` - ${complementoValue}` : ""} - ${bairroValue} - CEP: ${cepValue}`;
+    const inputEndereco = document.createElement("input");
+    inputEndereco.type = "hidden";
+    inputEndereco.name = "endereco_completo";
+    inputEndereco.value = enderecoCompleto;
+    form.current.appendChild(inputEndereco);
 
     // ============================================================
     // ENVIO (VIA SERVIÇOS)
@@ -287,10 +356,8 @@ function Solicitacao() {
     setIsSubmitting(true);
 
     try {
-      // ✅ 1. Enviar e-mail para a Barege
       await enviarEmailBarege(form.current);
 
-      // ✅ 2. Enviar e-mail de confirmação para o CLIENTE
       await enviarEmailConfirmacaoCliente({
         nome,
         email,
@@ -303,7 +370,6 @@ function Solicitacao() {
         dataEnvio: new Date().toLocaleDateString("pt-BR"),
       });
 
-      // ✅ 3. Abrir WhatsApp em segunda aba
       const mensagemWpp = montarMensagemWhatsApp({
         nome,
         email,
@@ -325,6 +391,11 @@ function Solicitacao() {
       setTipoEscolhido("");
       setMidiaEscolhida("");
       setValidadeEscolhida("");
+      setCep("");
+      setRua("");
+      setNumero("");
+      setBairro("");
+      setComplemento("");
       setErrors({});
     } catch (error) {
       setSubmitMessage("❌ Erro ao enviar. Tente novamente.");
@@ -443,7 +514,6 @@ function Solicitacao() {
                   <div className="space-y-3">
                     {midiasCertificado.map((m) => {
                       const visual = getVisualPorTipo(m.infoTitulo);
-                      // ✅ Mostrar preço final (tipo + mídia) para 1 ano
                       const precoComMidia =
                         (tipo?.precoBase || 0) + m.adicional;
                       return (
@@ -486,7 +556,6 @@ function Solicitacao() {
               )}
 
               {/* ETAPA 3: Validade */}
-              {/* ETAPA 3: Validade */}
               {step === 3 && (
                 <div>
                   <div className="flex items-center gap-2 mb-6">
@@ -503,13 +572,12 @@ function Solicitacao() {
                   <div className="space-y-3">
                     {validadesCertificado
                       .filter((v) => {
-                        // ✅ Verificar se existe produto com esta combinação na tabela
                         const preco = buscarPrecoProduto(
                           tipoEscolhido,
                           midiaEscolhida,
                           v.id,
                         );
-                        return preco > 0; // Só mostra se encontrou o produto
+                        return preco > 0;
                       })
                       .map((v) => {
                         const precoValidade = buscarPrecoProduto(
@@ -616,7 +684,7 @@ function Solicitacao() {
                       )}
                     </div>
 
-                    {/* E-mail e WhatsApp lado a lado */}
+                    {/* E-mail e WhatsApp */}
                     <div className="grid sm:grid-cols-2 gap-4">
                       <div>
                         <label className="block text-sm font-semibold text-yale-blue mb-1">
@@ -700,6 +768,133 @@ function Solicitacao() {
                       </p>
                     </div>
 
+                    {/* ✅ Endereço */}
+                    <div className="bg-bright-snow rounded-xl p-4">
+                      <h3 className="text-sm font-semibold text-yale-blue mb-3">
+                        📍 Endereço de Cobrança
+                      </h3>
+
+                      {/* CEP */}
+                      <div className="mb-4">
+                        <label className="block text-sm font-semibold text-yale-blue mb-1">
+                          CEP <span className="text-red-500">*</span>
+                        </label>
+                        <div className="flex gap-2">
+                          <input
+                            type="text"
+                            name="cep"
+                            placeholder="00000-000"
+                            value={cep}
+                            onChange={(e) => handleBuscarCEP(e.target.value)}
+                            maxLength={9}
+                            className={`flex-1 px-4 py-3 rounded-lg border ${errors.cep ? "border-red-400" : "border-gray-300"} focus:ring-2 focus:ring-rich-cerulean transition bg-white`}
+                          />
+                          {buscandoCEP && (
+                            <span className="flex items-center text-sm text-gray-400">
+                              <Loader2 className="w-4 h-4 animate-spin mr-1" />
+                              Buscando...
+                            </span>
+                          )}
+                        </div>
+                        {errors.cep && (
+                          <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
+                            <AlertCircle className="w-4 h-4" />
+                            {errors.cep}
+                          </p>
+                        )}
+                      </div>
+
+                      {/* Rua */}
+                      <div className="mb-4">
+                        <label className="block text-sm font-semibold text-yale-blue mb-1">
+                          Rua <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          name="rua"
+                          placeholder="Nome da rua"
+                          value={rua}
+                          onChange={(e) => {
+                            setRua(e.target.value);
+                            setErrors((prev) => ({ ...prev, rua: "" }));
+                          }}
+                          className={`w-full px-4 py-3 rounded-lg border ${errors.rua ? "border-red-400" : "border-gray-300"} focus:ring-2 focus:ring-rich-cerulean transition bg-white`}
+                        />
+                        {errors.rua && (
+                          <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
+                            <AlertCircle className="w-4 h-4" />
+                            {errors.rua}
+                          </p>
+                        )}
+                      </div>
+
+                      {/* Número e Bairro */}
+                      <div className="grid sm:grid-cols-2 gap-4 mb-4">
+                        <div>
+                          <label className="block text-sm font-semibold text-yale-blue mb-1">
+                            Número <span className="text-red-500">*</span>
+                          </label>
+                          <input
+                            type="text"
+                            name="numero"
+                            placeholder="Nº"
+                            value={numero}
+                            onChange={(e) => {
+                              setNumero(e.target.value);
+                              setErrors((prev) => ({ ...prev, numero: "" }));
+                            }}
+                            className={`w-full px-4 py-3 rounded-lg border ${errors.numero ? "border-red-400" : "border-gray-300"} focus:ring-2 focus:ring-rich-cerulean transition bg-white`}
+                          />
+                          {errors.numero && (
+                            <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
+                              <AlertCircle className="w-4 h-4" />
+                              {errors.numero}
+                            </p>
+                          )}
+                        </div>
+                        <div>
+                          <label className="block text-sm font-semibold text-yale-blue mb-1">
+                            Bairro <span className="text-red-500">*</span>
+                          </label>
+                          <input
+                            type="text"
+                            name="bairro"
+                            placeholder="Bairro"
+                            value={bairro}
+                            onChange={(e) => {
+                              setBairro(e.target.value);
+                              setErrors((prev) => ({ ...prev, bairro: "" }));
+                            }}
+                            className={`w-full px-4 py-3 rounded-lg border ${errors.bairro ? "border-red-400" : "border-gray-300"} focus:ring-2 focus:ring-rich-cerulean transition bg-white`}
+                          />
+                          {errors.bairro && (
+                            <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
+                              <AlertCircle className="w-4 h-4" />
+                              {errors.bairro}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Complemento */}
+                      <div>
+                        <label className="block text-sm font-semibold text-yale-blue mb-1">
+                          Complemento{" "}
+                          <span className="text-gray-400 text-xs">
+                            (opcional)
+                          </span>
+                        </label>
+                        <input
+                          type="text"
+                          name="complemento"
+                          placeholder="Apto, Bloco, Sala..."
+                          value={complemento}
+                          onChange={(e) => setComplemento(e.target.value)}
+                          className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-rich-cerulean transition bg-white"
+                        />
+                      </div>
+                    </div>
+
                     {/* Botão de envio */}
                     <button
                       type="submit"
@@ -775,7 +970,7 @@ function Solicitacao() {
                     </span>
                   </div>
                   <p className="text-xs text-gray-400">
-                    Aceitamos paguamentos a vista,Cartão e Pix
+                    Aceitamos pagamentos à vista, Cartão e Pix
                   </p>
                 </div>
               ) : (

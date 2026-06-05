@@ -51,3 +51,15 @@ export const validarDocumento = (valor: string): boolean => {
   if (numeros.length === 14) return validarCNPJ(valor);
   return false;
 };
+
+
+export const validarCEP = (cep: string): boolean => {
+  const cepLimpo = cep.replace(/[^\d]/g, "");
+  return cepLimpo.length === 8;
+};
+
+export const formatarCEP = (cep: string): string => {
+  const cepLimpo = cep.replace(/[^\d]/g, "");
+  if (cepLimpo.length <= 5) return cepLimpo;
+  return `${cepLimpo.slice(0, 5)}-${cepLimpo.slice(5, 8)}`;
+};

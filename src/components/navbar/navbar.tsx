@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { MessageCircle, Menu, X, FileCheck } from "lucide-react";
 import { companyInfo } from "../../data";
-const baregeLogo = "https://i.postimg.cc/C1t1Zt1y/barege-Logo.png";
+const baregeLogo = "https://i.imgur.com/nfnWofK.png";
 
 function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

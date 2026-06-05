@@ -14,7 +14,7 @@ import { companyInfo } from "../../data";
 import DepoimentoCard from "../../components/cards/depoimentosCard";
 import { depoimentosData } from "../../data/depoimentoData";
 
-const baregeLogo = "https://i.postimg.cc/C1t1Zt1y/barege-Logo.png";
+const baregeLogo = "https://i.imgur.com/nfnWofK.png";
 
 function SobreNos() {
   const diferenciais = [

@@ -146,37 +146,37 @@ export const validadesCertificado: ValidadeCertificado[] = [
 export const tipoVisualMap: Record<string, TipoVisual> = {
   "A1 - Sem Mídia": {
     imagem:
-      "https://i.postimg.cc/3ymxQXvq/e-cpf-a1-sem-midia-1-ano-barege1-161279647778.png",
+      "https://i.imgur.com/TyU2WIT.png",
     corBorda: "border-green-400",
     corSombra: "shadow-green-200",
   },
   "A3 - Sem Mídia": {
     imagem:
-      "https://i.postimg.cc/3ymxQXvq/e-cpf-a1-sem-midia-1-ano-barege1-161279647778.png",
+      "https://i.imgur.com/TyU2WIT.png",
     corBorda: "border-blue-400",
     corSombra: "shadow-blue-200",
   },
   "A3 - Cartão": {
     imagem:
-      "https://i.postimg.cc/rdxw21rn/e-cnpj-a3-cartao-1-ano-barege1-161279485263-removebg-preview.png",
+      "https://i.imgur.com/ww8jldL.png",
     corBorda: "border-yale-blue",
     corSombra: "shadow-blue-300",
   },
   "A3 - Cartão com Leitora": {
     imagem:
-      "https://i.postimg.cc/HJXk1wy6/e-cpf-a3-token-1-ano-certbank-1-161274464487.png",
+      "https://i.imgur.com/hninOoj.png",
     corBorda: "border-purple-400",
     corSombra: "shadow-purple-200",
   },
   "A3 - Token": {
     imagem:
-      "https://i.postimg.cc/HJXk1wy6/e-cpf-a3-token-1-ano-certbank-1-161274464487.png",
+      "https://i.imgur.com/hninOoj.png",
     corBorda: "border-amber-400",
     corSombra: "shadow-amber-200",
   },
   "A3 - Token USB": {
     imagem:
-      "https://i.postimg.cc/HJXk1wy6/e-cpf-a3-token-1-ano-certbank-1-161274464487.png",
+      "https://i.imgur.com/hninOoj.png",
     corBorda: "border-amber-400",
     corSombra: "shadow-amber-200",
   },

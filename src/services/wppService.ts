@@ -1,5 +1,3 @@
-// src/services/whatsappService.ts
-
 // ============================================================
 // CONFIGURAÇÃO
 // ============================================================
@@ -17,26 +15,36 @@ export interface DadosWhatsApp {
   midia: string;
   validade: string;
   preco: string;
+  endereco?: string;
 }
 
 // ============================================================
 // MONTAR MENSAGEM PARA WHATSAPP (enviada pelo próprio cliente)
 // ============================================================
 export const montarMensagemWhatsApp = (dados: DadosWhatsApp): string => {
-  return (
-    `Olá! Gostaria de solicitar meu Certificado Digital.%0A%0A` +
+  let mensagem =
+    `Ola! Gostaria de solicitar meu Certificado Digital.%0A%0A` +
     `*Meus dados:*%0A` +
-    `👤 Nome: ${dados.nome}%0A` +
-    `📧 E-mail: ${dados.email}%0A` +
-    `📱 WhatsApp: ${dados.whatsapp}%0A` +
-    `📄 Documento: ${dados.documento}%0A%0A` +
+    `Nome: ${dados.nome}%0A` +
+    `E-mail: ${dados.email}%0A` +
+    `WhatsApp: ${dados.whatsapp}%0A` +
+    `Documento: ${dados.documento}%0A`;
+
+  // Endereço (se fornecido)
+  if (dados.endereco) {
+    mensagem += `Endereco: ${dados.endereco}%0A`;
+  }
+
+  mensagem +=
+    `%0A` +
     `*Produto escolhido:*%0A` +
-    `🔒 Tipo: ${dados.tipo}%0A` +
-    `💾 Mídia: ${dados.midia}%0A` +
-    `📅 Validade: ${dados.validade}%0A` +
-    `💰 Total: ${dados.preco}%0A%0A` +
-    `Aguardo contato para prosseguir com a emissão. Obrigado! 🙏`
-  );
+    `Tipo: ${dados.tipo}%0A` +
+    `Midia: ${dados.midia}%0A` +
+    `Validade: ${dados.validade}%0A` +
+    `Total: ${dados.preco}%0A%0A` +
+    `Aguardo contato para prosseguir com a emissao. Obrigado!`;
+
+  return mensagem;
 };
 
 // ============================================================
