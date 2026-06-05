@@ -1,13 +1,7 @@
-// src/services/wppService.ts
+import type { Endereco } from "../models/enderecoModel";
 
-// ============================================================
-// CONFIGURAÇÃO
-// ============================================================
 const WHATSAPP_NUMERO = "5511998606204";
 
-// ============================================================
-// TIPOS
-// ============================================================
 export interface DadosWhatsApp {
   nome: string;
   email: string;
@@ -17,12 +11,9 @@ export interface DadosWhatsApp {
   midia: string;
   validade: string;
   preco: string;
-  endereco: string; 
+  endereco: Endereco; 
 }
 
-// ============================================================
-// MONTAR MENSAGEM PARA WHATSAPP (enviada pelo próprio cliente)
-// ============================================================
 export const montarMensagemWhatsApp = (dados: DadosWhatsApp): string => {
   const mensagem =
     `Ola! Gostaria de solicitar meu Certificado Digital.%0A%0A` +
@@ -31,7 +22,12 @@ export const montarMensagemWhatsApp = (dados: DadosWhatsApp): string => {
     `E-mail: ${dados.email}%0A` +
     `WhatsApp: ${dados.whatsapp}%0A` +
     `Documento: ${dados.documento}%0A` +
-    `Endereco: ${dados.endereco}%0A` + // ✅ Sempre exibido
+    `%0A` +
+    `*Endereco:*%0A` +
+    `CEP: ${dados.endereco.cep}%0A` +
+    `Rua: ${dados.endereco.rua}, ${dados.endereco.numero}%0A` +
+    `Bairro: ${dados.endereco.bairro}%0A` +
+    (dados.endereco.complemento ? `Complemento: ${dados.endereco.complemento}%0A` : "") +
     `%0A` +
     `*Produto escolhido:*%0A` +
     `Tipo: ${dados.tipo}%0A` +
@@ -43,9 +39,6 @@ export const montarMensagemWhatsApp = (dados: DadosWhatsApp): string => {
   return mensagem;
 };
 
-// ============================================================
-// ABRIR WHATSAPP EM NOVA ABA
-// ============================================================
 export const abrirWhatsApp = (mensagem: string): void => {
   window.open(`https://wa.me/${WHATSAPP_NUMERO}?text=${mensagem}`, "_blank");
 };

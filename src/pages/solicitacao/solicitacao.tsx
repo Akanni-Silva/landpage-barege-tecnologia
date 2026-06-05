@@ -48,6 +48,7 @@ import {
   montarMensagemWhatsApp,
 } from "../../services/wppService";
 import { buscarEnderecoPorCEP } from "../../services/cepService";
+import { formatarEndereco, type Endereco } from "../../models/enderecoModel";
 
 // ============================================================
 // MAPEAMENTO DE ÍCONES
@@ -174,7 +175,7 @@ function Solicitacao() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // ✅ Estados para endereço
+  // Estados para endereço
   const [cep, setCep] = useState("");
   const [rua, setRua] = useState("");
   const [numero, setNumero] = useState("");
@@ -192,7 +193,7 @@ function Solicitacao() {
   const validade = validadesCertificado.find((v) => v.id === validadeEscolhida);
 
   // ============================================================
-  // PREÇO FINAL - Buscado diretamente da tabela de produtos
+  // PREÇO FINAL
   // ============================================================
   const precoFinal = buscarPrecoProduto(
     tipoEscolhido,
@@ -273,41 +274,22 @@ function Solicitacao() {
     // ============================================================
     const newErrors: FormErrors = {};
 
-    if (nome.length < 3) {
+    if (nome.length < 3)
       newErrors.nome = "Nome deve ter pelo menos 3 caracteres";
-    }
-
-    if (!email || !email.includes("@")) {
-      newErrors.email = "E-mail inválido";
-    }
-
-    if (!whatsapp) {
-      newErrors.whatsapp = "WhatsApp é obrigatório";
-    } else if (!validarTelefone(whatsapp)) {
+    if (!email || !email.includes("@")) newErrors.email = "E-mail inválido";
+    if (!whatsapp) newErrors.whatsapp = "WhatsApp é obrigatório";
+    else if (!validarTelefone(whatsapp))
       newErrors.whatsapp = "WhatsApp inválido. Use (11) 99999-9999";
-    }
-
-    if (!documento) {
-      newErrors.documento = "CPF ou CNPJ é obrigatório";
-    } else if (!validarDocumento(documento)) {
+    if (!documento) newErrors.documento = "CPF ou CNPJ é obrigatório";
+    else if (!validarDocumento(documento))
       newErrors.documento = "CPF ou CNPJ inválido";
-    } else if (!validarTipoDocumento(tipoEscolhido, documento)) {
+    else if (!validarTipoDocumento(tipoEscolhido, documento))
       newErrors.documento = getMensagemErroTipo(tipoEscolhido);
-    }
-
-    // ✅ Validação dos campos de endereço
-    if (!cepValue || !validarCEP(cepValue)) {
+    if (!cepValue || !validarCEP(cepValue))
       newErrors.cep = "CEP inválido. Use o formato 00000-000";
-    }
-    if (!ruaValue) {
-      newErrors.rua = "Rua é obrigatória";
-    }
-    if (!numeroValue) {
-      newErrors.numero = "Número é obrigatório";
-    }
-    if (!bairroValue) {
-      newErrors.bairro = "Bairro é obrigatório";
-    }
+    if (!ruaValue) newErrors.rua = "Rua é obrigatória";
+    if (!numeroValue) newErrors.numero = "Número é obrigatório";
+    if (!bairroValue) newErrors.bairro = "Bairro é obrigatório";
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -315,9 +297,17 @@ function Solicitacao() {
     }
 
     // ============================================================
-    // MONTAR ENDEREÇO COMPLETO
+    // MONTAR OBJETO DE ENDEREÇO
     // ============================================================
-    const enderecoCompleto = `${ruaValue}, ${numeroValue}${complementoValue ? ` - ${complementoValue}` : ""} - ${bairroValue} - CEP: ${cepValue}`;
+    const enderecoObj: Endereco = {
+      cep: cepValue,
+      rua: ruaValue,
+      numero: numeroValue,
+      bairro: bairroValue,
+      complemento: complementoValue || undefined,
+    };
+
+    const enderecoCompleto = formatarEndereco(enderecoObj);
 
     // ============================================================
     // PREPARAR CAMPOS HIDDEN
@@ -351,16 +341,14 @@ function Solicitacao() {
     form.current.appendChild(inputEndereco);
 
     // ============================================================
-    // ENVIO (VIA SERVIÇOS)
+    // ENVIO
     // ============================================================
     setErrors({});
     setIsSubmitting(true);
 
     try {
-      // ✅ 1. Enviar e-mail para a Barege
       await enviarEmailBarege(form.current);
 
-      // ✅ 2. Enviar e-mail de confirmação para o CLIENTE (com endereço)
       await enviarEmailConfirmacaoCliente({
         nome,
         email,
@@ -371,10 +359,9 @@ function Solicitacao() {
         validade: validade?.nome || "—",
         preco: formatPrice(precoFinal),
         dataEnvio: new Date().toLocaleDateString("pt-BR"),
-        endereco: enderecoCompleto,
+        endereco: enderecoObj,
       });
 
-      // ✅ 3. Abrir WhatsApp em segunda aba (com endereço)
       const mensagemWpp = montarMensagemWhatsApp({
         nome,
         email,
@@ -384,7 +371,7 @@ function Solicitacao() {
         midia: midia?.nome || "—",
         validade: validade?.nome || "—",
         preco: formatPrice(precoFinal),
-        endereco: enderecoCompleto,
+        endereco: enderecoObj,
       });
       abrirWhatsApp(mensagemWpp);
 
@@ -417,8 +404,7 @@ function Solicitacao() {
   // ============================================================
   return (
     <div className="bg-bright-snow">
-      {/* Banner */}
-      <section className="bg-linear-to-br from-yale-blue to-rich-cerulean py-16">
+      <section className="bg-gradient-to-br from-yale-blue to-rich-cerulean py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl font-extrabold text-white mb-4">
             Solicite seu Certificado Digital
@@ -431,7 +417,6 @@ function Solicitacao() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid lg:grid-cols-3 gap-8">
-          {/* COLUNA PRINCIPAL - ETAPAS DO FORMULÁRIO */}
           <div className="lg:col-span-2">
             <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
               {/* Barra de progresso */}
@@ -439,11 +424,7 @@ function Solicitacao() {
                 {[1, 2, 3, 4].map((s) => (
                   <div key={s} className="flex items-center">
                     <div
-                      className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold ${
-                        step >= s
-                          ? "bg-yale-blue text-white"
-                          : "bg-gray-200 text-gray-500"
-                      }`}
+                      className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold ${step >= s ? "bg-yale-blue text-white" : "bg-gray-200 text-gray-500"}`}
                     >
                       {step > s ? <Check className="w-4 h-4" /> : s}
                     </div>
@@ -478,11 +459,7 @@ function Solicitacao() {
                           setTipoEscolhido(t.id);
                           setStep(2);
                         }}
-                        className={`p-6 rounded-2xl border-2 text-left transition ${
-                          tipoEscolhido === t.id
-                            ? "border-yale-blue bg-blue-50"
-                            : "border-gray-200 hover:border-rich-cerulean"
-                        }`}
+                        className={`p-6 rounded-2xl border-2 text-left transition ${tipoEscolhido === t.id ? "border-yale-blue bg-blue-50" : "border-gray-200 hover:border-rich-cerulean"}`}
                       >
                         {renderIcon(
                           t.icone,
@@ -529,11 +506,7 @@ function Solicitacao() {
                             setMidiaEscolhida(m.id);
                             setStep(3);
                           }}
-                          className={`w-full p-4 rounded-2xl border-2 text-left flex items-center gap-4 transition ${
-                            midiaEscolhida === m.id
-                              ? `${visual?.corBorda || "border-yale-blue"} bg-blue-50`
-                              : "border-gray-200 hover:border-rich-cerulean"
-                          }`}
+                          className={`w-full p-4 rounded-2xl border-2 text-left flex items-center gap-4 transition ${midiaEscolhida === m.id ? `${visual?.corBorda || "border-yale-blue"} bg-blue-50` : "border-gray-200 hover:border-rich-cerulean"}`}
                         >
                           {renderIcon(
                             m.icone,
@@ -577,14 +550,14 @@ function Solicitacao() {
                   </div>
                   <div className="space-y-3">
                     {validadesCertificado
-                      .filter((v) => {
-                        const preco = buscarPrecoProduto(
-                          tipoEscolhido,
-                          midiaEscolhida,
-                          v.id,
-                        );
-                        return preco > 0;
-                      })
+                      .filter(
+                        (v) =>
+                          buscarPrecoProduto(
+                            tipoEscolhido,
+                            midiaEscolhida,
+                            v.id,
+                          ) > 0,
+                      )
                       .map((v) => {
                         const precoValidade = buscarPrecoProduto(
                           tipoEscolhido,
@@ -598,11 +571,7 @@ function Solicitacao() {
                               setValidadeEscolhida(v.id);
                               setStep(4);
                             }}
-                            className={`w-full p-4 rounded-2xl border-2 text-left flex items-center gap-4 transition ${
-                              validadeEscolhida === v.id
-                                ? "border-yale-blue bg-blue-50"
-                                : "border-gray-200 hover:border-rich-cerulean"
-                            }`}
+                            className={`w-full p-4 rounded-2xl border-2 text-left flex items-center gap-4 transition ${validadeEscolhida === v.id ? "border-yale-blue bg-blue-50" : "border-gray-200 hover:border-rich-cerulean"}`}
                           >
                             {renderIcon(
                               v.icone,
@@ -644,7 +613,6 @@ function Solicitacao() {
                       4. Seus Dados
                     </h2>
                   </div>
-
                   <div className="bg-bright-snow rounded-xl p-4 mb-6">
                     <h3 className="text-sm font-semibold text-yale-blue mb-2">
                       Resumo do Pedido
@@ -668,7 +636,6 @@ function Solicitacao() {
                     className="space-y-5"
                     noValidate
                   >
-                    {/* Nome */}
                     <div>
                       <label className="block text-sm font-semibold text-yale-blue mb-1">
                         Nome Completo <span className="text-red-500">*</span>
@@ -690,7 +657,6 @@ function Solicitacao() {
                       )}
                     </div>
 
-                    {/* E-mail e WhatsApp lado a lado */}
                     <div className="grid sm:grid-cols-2 gap-4">
                       <div>
                         <label className="block text-sm font-semibold text-yale-blue mb-1">
@@ -734,7 +700,6 @@ function Solicitacao() {
                       </div>
                     </div>
 
-                    {/* Documento */}
                     <div>
                       <label className="block text-sm font-semibold text-yale-blue mb-1">
                         {tipoEscolhido === "ecpf"
@@ -774,13 +739,11 @@ function Solicitacao() {
                       </p>
                     </div>
 
-                    {/* ✅ Endereço */}
+                    {/* Endereço */}
                     <div className="bg-bright-snow rounded-xl p-4">
                       <h3 className="text-sm font-semibold text-yale-blue mb-3">
                         Endereço de Cobrança
                       </h3>
-
-                      {/* CEP */}
                       <div className="mb-4">
                         <label className="block text-sm font-semibold text-yale-blue mb-1">
                           CEP <span className="text-red-500">*</span>
@@ -809,8 +772,6 @@ function Solicitacao() {
                           </p>
                         )}
                       </div>
-
-                      {/* Rua */}
                       <div className="mb-4">
                         <label className="block text-sm font-semibold text-yale-blue mb-1">
                           Rua <span className="text-red-500">*</span>
@@ -833,8 +794,6 @@ function Solicitacao() {
                           </p>
                         )}
                       </div>
-
-                      {/* Número e Bairro */}
                       <div className="grid sm:grid-cols-2 gap-4 mb-4">
                         <div>
                           <label className="block text-sm font-semibold text-yale-blue mb-1">
@@ -881,8 +840,6 @@ function Solicitacao() {
                           )}
                         </div>
                       </div>
-
-                      {/* Complemento */}
                       <div>
                         <label className="block text-sm font-semibold text-yale-blue mb-1">
                           Complemento{" "}
@@ -901,7 +858,6 @@ function Solicitacao() {
                       </div>
                     </div>
 
-                    {/* Botão de envio */}
                     <button
                       type="submit"
                       disabled={isSubmitting}
@@ -932,11 +888,10 @@ function Solicitacao() {
                 <Wallet className="w-5 h-5 inline mr-2" />
                 Resumo do Pedido
               </h3>
-
               {midiaVisual && (
                 <div className="relative flex justify-center mb-6">
                   <div
-                    className={`relative w-40 h-40 sm:w-44 sm:h-44 rounded-full border-4 ${midiaVisual.corBorda} ${midiaVisual.corSombra} shadow-xl animate-pulse-borda transition-all duration-700 ease-in-out bg-linear-to-br from-bright-snow to-white flex items-center justify-center overflow-hidden`}
+                    className={`relative w-40 h-40 sm:w-44 sm:h-44 rounded-full border-4 ${midiaVisual.corBorda} ${midiaVisual.corSombra} shadow-xl animate-pulse-borda transition-all duration-700 ease-in-out bg-gradient-to-br from-bright-snow to-white flex items-center justify-center overflow-hidden`}
                   >
                     <img
                       src={midiaVisual.imagem}
@@ -956,7 +911,6 @@ function Solicitacao() {
                   </button>
                 </div>
               )}
-
               {tipo && midia && validade ? (
                 <div className="space-y-3">
                   <div className="flex justify-center text-sm">
@@ -987,7 +941,6 @@ function Solicitacao() {
                 </div>
               )}
             </div>
-
             <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
               <h3 className="text-lg font-bold text-yale-blue mb-4">
                 Como Funciona
