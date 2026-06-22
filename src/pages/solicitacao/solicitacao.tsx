@@ -42,13 +42,14 @@ import {
   validadesCertificado,
   todosProdutos,
 } from "../../data";
-import type { DadosModalProduto } from "../../models/productModel";
+
 import {
   abrirWhatsApp,
   montarMensagemWhatsApp,
 } from "../../services/wppService";
 import { buscarEnderecoPorCEP } from "../../services/cepService";
 import { formatarEndereco, type Endereco } from "../../models/enderecoModel";
+import type { DadosModalProduto } from "../../models/productModel";
 
 // ============================================================
 // MAPEAMENTO DE ÍCONES
@@ -66,6 +67,17 @@ const iconeMap: Record<string, React.ComponentType<{ className?: string }>> = {
 };
 
 // ============================================================
+// MAPEAMENTO DE ID DE MÍDIA → TIPO DO PRODUTO NO CATÁLOGO
+// ============================================================
+const midiaIdParaTipo: Record<string, string> = {
+  "a1-sem-midia": "A1 - Sem Mídia",
+  "a3-sem-midia": "A3 - Sem Mídia",
+  "a3-cartao": "A3 - Cartão",
+  "a3-cartao-leitora": "A3 - Cartão com Leitora",
+  "a3-token": "A3 - Token USB",
+};
+
+// ============================================================
 // HELPER: Buscar preço exato na tabela de produtos
 // ============================================================
 const buscarPrecoProduto = (
@@ -73,19 +85,14 @@ const buscarPrecoProduto = (
   midiaId: string,
   validadeId: string,
 ): number => {
-  const produto = todosProdutos.find((p) => {
-    const tipoMatch =
-      tipoId === "ecpf" ? p.nome === "e-CPF" : p.nome === "e-CNPJ";
-    const midiaMatch = midiasCertificado.find((m) => m.id === midiaId);
-    const validadeMatch = validadesCertificado.find((v) => v.id === validadeId);
+  const tipoNome = tipoId === "ecpf" ? "e-CPF" : "e-CNPJ";
+  const midiaTipo = midiaIdParaTipo[midiaId] || "";
+  const validadeNome = validadeId === "1-ano" ? "1 Ano" : "2 Anos";
 
-    return (
-      tipoMatch &&
-      midiaMatch &&
-      p.tipo === midiaMatch.nome &&
-      p.duracao === validadeMatch?.nome
-    );
-  });
+  const produto = todosProdutos.find(
+    (p) =>
+      p.nome === tipoNome && p.tipo === midiaTipo && p.duracao === validadeNome,
+  );
 
   return produto?.precoOriginal || 0;
 };
@@ -188,13 +195,8 @@ function Solicitacao() {
   // ============================================================
   const midia = getMidiaPorId(midiaEscolhida);
   const midiaVisual = midia ? getVisualPorTipo(midia.infoTitulo) : null;
-
   const tipo = tiposCertificado.find((t) => t.id === tipoEscolhido);
   const validade = validadesCertificado.find((v) => v.id === validadeEscolhida);
-
-  // ============================================================
-  // PREÇO FINAL
-  // ============================================================
   const precoFinal = buscarPrecoProduto(
     tipoEscolhido,
     midiaEscolhida,
@@ -206,7 +208,6 @@ function Solicitacao() {
   // ============================================================
   const dadosModal: DadosModalProduto | null = (() => {
     if (!midia || !midiaVisual) return null;
-
     return {
       titulo: midia.infoTitulo,
       descricao: midia.infoDescricao,
@@ -224,7 +225,6 @@ function Solicitacao() {
     const cepFormatado = formatarCEP(cepValue);
     setCep(cepFormatado);
     setErrors((prev) => ({ ...prev, cep: "" }));
-
     const cepLimpo = cepValue.replace(/[^\d]/g, "");
     if (cepLimpo.length === 8) {
       setBuscandoCEP(true);
@@ -269,11 +269,7 @@ function Solicitacao() {
     const complementoValue =
       formData.get("complemento")?.toString().trim() || "";
 
-    // ============================================================
-    // VALIDAÇÃO
-    // ============================================================
     const newErrors: FormErrors = {};
-
     if (nome.length < 3)
       newErrors.nome = "Nome deve ter pelo menos 3 caracteres";
     if (!email || !email.includes("@")) newErrors.email = "E-mail inválido";
@@ -296,9 +292,6 @@ function Solicitacao() {
       return;
     }
 
-    // ============================================================
-    // MONTAR OBJETO DE ENDEREÇO
-    // ============================================================
     const enderecoObj: Endereco = {
       cep: cepValue,
       rua: ruaValue,
@@ -306,12 +299,8 @@ function Solicitacao() {
       bairro: bairroValue,
       complemento: complementoValue || undefined,
     };
-
     const enderecoCompleto = formatarEndereco(enderecoObj);
 
-    // ============================================================
-    // PREPARAR CAMPOS HIDDEN
-    // ============================================================
     const camposRemover = [
       "tipo-certificado",
       "data_envio",
@@ -340,15 +329,10 @@ function Solicitacao() {
     inputEndereco.value = enderecoCompleto;
     form.current.appendChild(inputEndereco);
 
-    // ============================================================
-    // ENVIO
-    // ============================================================
     setErrors({});
     setIsSubmitting(true);
-
     try {
       await enviarEmailBarege(form.current);
-
       await enviarEmailConfirmacaoCliente({
         nome,
         email,
@@ -361,7 +345,6 @@ function Solicitacao() {
         dataEnvio: new Date().toLocaleDateString("pt-BR"),
         endereco: enderecoObj,
       });
-
       const mensagemWpp = montarMensagemWhatsApp({
         nome,
         email,
@@ -374,7 +357,6 @@ function Solicitacao() {
         endereco: enderecoObj,
       });
       abrirWhatsApp(mensagemWpp);
-
       setSubmitMessage(
         "✅ Solicitação enviada com sucesso! Um e-mail de confirmação foi enviado para você.",
       );
@@ -404,7 +386,7 @@ function Solicitacao() {
   // ============================================================
   return (
     <div className="bg-bright-snow">
-      <section className="bg-gradient-to-br from-yale-blue to-rich-cerulean py-16">
+      <section className="bg-linear-to-br from-yale-blue to-rich-cerulean py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl font-extrabold text-white mb-4">
             Solicite seu Certificado Digital
@@ -419,7 +401,6 @@ function Solicitacao() {
         <div className="grid lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
             <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
-              {/* Barra de progresso */}
               <div className="flex items-center justify-center mb-8">
                 {[1, 2, 3, 4].map((s) => (
                   <div key={s} className="flex items-center">
@@ -629,7 +610,6 @@ function Solicitacao() {
                       </p>
                     </div>
                   </div>
-
                   <form
                     ref={form}
                     onSubmit={handleSubmit}
@@ -656,7 +636,6 @@ function Solicitacao() {
                         </p>
                       )}
                     </div>
-
                     <div className="grid sm:grid-cols-2 gap-4">
                       <div>
                         <label className="block text-sm font-semibold text-yale-blue mb-1">
@@ -699,7 +678,6 @@ function Solicitacao() {
                         )}
                       </div>
                     </div>
-
                     <div>
                       <label className="block text-sm font-semibold text-yale-blue mb-1">
                         {tipoEscolhido === "ecpf"
@@ -962,7 +940,6 @@ function Solicitacao() {
           </div>
         </div>
       </div>
-
       <ProductModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}

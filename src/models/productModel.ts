@@ -22,6 +22,8 @@ export interface MidiaCertificado {
   infoTitulo: string;
   infoDescricao: string;
   infoBeneficios: string[];
+  // ✅ Tipo real do produto (ex: "A3 - Token USB")
+  tipoProduto?: string;
 }
 
 export interface ValidadeCertificado {
